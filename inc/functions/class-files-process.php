@@ -65,6 +65,11 @@ class Files_Process {
 	/*
 	 * Write on log file
 	 * */
+
+	public function append_section_separator( $file_name ) {
+		$this->append( PHP_EOL . '****************************' . PHP_EOL, $file_name );
+	}
+
 	public function append( $string, $file_name, $show_on_screen = true ) {
 
 		$string = $string . PHP_EOL;
@@ -82,8 +87,16 @@ class Files_Process {
 		}
 	}
 
-	public function append_section_separator($file_name) {
-		$this->append(PHP_EOL . '****************************' . PHP_EOL,$file_name);
+	/*
+	 * check directory exists and if not, it will create
+	 * */
+	public function create_directory_if_not_exist( $path, $type ) {
+		if ( ! file_exists( $path ) ) {
+			mkdir( $path, 0755 );
+			return "The directory for {$type} is created succesfully at: " . date( 'Y-m-d H:i:s' ) . '.';
+		} else {
+			return false;
+		}
 	}
 
 }

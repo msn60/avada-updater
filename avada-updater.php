@@ -45,6 +45,7 @@ class  Avada_Updater {
 	public $files_process_obj;
 	public $htaccess_lite_speed_config;
 	public $critical_files;
+	public $important_directories;
 
 	public function __construct( $primary_values ) {
 		$this->set_primary_config( $primary_values );
@@ -67,9 +68,17 @@ class  Avada_Updater {
 		 * */
 		if ( $this->primary_setting_obj->update_site_count() == 1 ) {
 			foreach ( $this->critical_files as $critical_file ) {
-				$this->check_critical_files_exists( $critical_file['path'], $critical_file['type'], $this->path_obj->main_log_file() );
+				$this->check_critical_files_exists( $critical_file['path'], $critical_file['type'] );
 			}
 		}
+		/*
+		 * =================================================================
+		 * Checking directory or files that we need to continue this script.
+		 * If they don't exist, we will create theme.
+		 * =================================================================
+		 * */
+		$this->check_important_directory_exist($this->important_directories);
+
 	}
 
 	public function set_primary_config( $primary_values ) {
@@ -95,32 +104,67 @@ class  Avada_Updater {
 		/*
 		 * critical files
 		 * */
-		$this->set_critical_files();
+		$this->critical_files = $this->set_critical_files();
+		/*
+		 * Important directories inside temp-source
+		 * */
+		$this->important_directories = $this->set_important_directories();
 	}
 
 	public function set_critical_files() {
-		$this->critical_files = [
+		return
 			[
-				'path' => $this->path_obj->main_path(),
-				'type' => 'main_path',
-			],
+				[
+					'path' => $this->path_obj->main_path(),
+					'type' => 'main_path',
+				],
+				[
+					'path' => $this->avada_obj->avada_new_files_temp_path(),
+					'type' => 'avada_file_path',
+				],
+				[
+					'path' => $this->avada_obj->avada_new_theme_file(),
+					'type' => 'avada_theme_file',
+				],
+				[
+					'path' => $this->avada_obj->avada_new_fusion_builder_file(),
+					'type' => 'avada_fusion_builder_file',
+				],
+				[
+					'path' => $this->avada_obj->avada_new_fusion_core_file(),
+					'type' => 'avada_fusion_core_file',
+				],
+			];
+	}
+
+	public function set_important_directories() {
+		return
 			[
-				'path' => $this->avada_obj->avada_new_files_temp_path(),
-				'type' => 'avada_file_path',
-			],
-			[
-				'path' => $this->avada_obj->avada_new_theme_file(),
-				'type' => 'avada_theme_file',
-			],
-			[
-				'path' => $this->avada_obj->avada_new_fusion_builder_file(),
-				'type' => 'avada_fusion_builder_file',
-			],
-			[
-				'path' => $this->avada_obj->avada_new_fusion_core_file(),
-				'type' => 'avada_fusion_core_file',
-			],
-		];
+				[
+					'path' => $this->avada_obj->avada_new_version_path(),
+					'type' => 'keeping new versions of Avada files',
+				],
+				[
+					'path' => $this->avada_obj->avada_older_version_path(),
+					'type' => 'keeping older versions of Avada files',
+				],
+				[
+					'path' => $this->avada_obj->avada_lang_path(),
+					'type' => 'keeping language files of Avada',
+				],
+				[
+					'path' => $this->updraft_obj->updraft_bak_path(),
+					'type' => 'keeping extra updraft files',
+				],
+				[
+					'path' => $this->backup_obj->whole_site_backup_path(),
+					'type' => 'keeping whole site files for update process',
+				],
+				[
+					'path' => $this->path_obj->log_files_path(),
+					'type' => 'keeping log files of update process',
+				],
+			];
 	}
 
 	public function htaccess_litespeed_check() {
@@ -140,7 +184,8 @@ class  Avada_Updater {
 	/*
 	 * Check critical directory or files
 	 * */
-	public function check_critical_files_exists( $path, $type, $logfile ) {
+
+	public function check_critical_files_exists( $path, $type, $logfile = null ) {
 		$error_message = 'Error message created on: ' . date( 'Y-m-d  H:i:s' ) . '.' . PHP_EOL;
 		if ( ! file_exists( $path ) ) {
 			switch ( $type ) {
@@ -167,6 +212,18 @@ class  Avada_Updater {
 		}
 
 	}
+
+	public function check_important_directory_exist( $important_directories ) {
+		foreach ( $important_directories as $important_directory ) {
+			$temp_message = $this->files_process_obj->create_directory_if_not_exist($important_directory ['path'],$important_directory ['type']);
+			if ($temp_message !== false ) {
+				$this->files_process_obj->append( $temp_message, $this->path_obj->main_log_file() );
+			}
+		}
+		$this->files_process_obj->append( 'End of checking to be existing important directories', $this->path_obj->main_log_file() );
+		$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file() );
+
+	}
 }
 
 
@@ -186,6 +243,8 @@ var_dump( $updater_obj->path_obj );
 var_dump( $updater_obj->avada_obj );
 var_dump( $updater_obj->backup_obj );
 var_dump( $updater_obj->updraft_obj );
+var_dump($updater_obj->critical_files);
+var_dump($updater_obj->important_directories);
 
 /*
 
