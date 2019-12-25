@@ -90,13 +90,45 @@ class Files_Process {
 	/*
 	 * check directory exists and if not, it will create
 	 * */
-	public function create_directory_if_not_exist( $path, $type ) {
+	public function make_directory_if_not_exist( $path, $type ) {
 		if ( ! file_exists( $path ) ) {
-			mkdir( $path, 0755 );
-			return "The directory for {$type} is created succesfully at: " . date( 'Y-m-d H:i:s' ) . '.';
+			$result = mkdir( $path, 0755 );
+			if ( $result === true ) {
+				return [
+					'message'             => "The directory for {$type} was created succesfully at: " . date( 'Y-m-d H:i:s' ) . '.',
+					'type' => 'successful',
+				];
+			} else {
+				return [
+					'message'             => "The directory for {$type} was not succesfully at: " . date( 'Y-m-d H:i:s' ) . '!!!',
+					'type' => 'un-successful',
+				];
+
+			}
 		} else {
-			return false;
+			return [
+				'message'             => "The directory {$type} was already existed.",
+				'type' => 'already-exist',
+			];
 		}
+
+	}
+
+
+	/*
+	 * Check is directory empty or not
+	 * */
+	function is_dir_empty( $dir_name ) {
+		if ( ! is_dir( $dir_name ) ) {
+			return 'is-file';
+		}
+		foreach ( scandir( $dir_name ) as $file ) {
+			if ( ! in_array( $file, array( '.', '..', '.svn', '.git' ) ) ) {
+				return 'not-empty-dir';
+			}
+		}
+
+		return 'is-empty-dir';
 	}
 
 }

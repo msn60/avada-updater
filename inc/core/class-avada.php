@@ -51,6 +51,7 @@ class Avada {
 	private $current_avada_theme_path;
 	private $current_avada_fusion_builder_path;
 	private $current_avada_fusion_core_path;
+	private $last_version_avada_path;
 
 	/**
 	 * Main constructor.
@@ -60,7 +61,7 @@ class Avada {
 	 * @access public
 	 * @since  1.0.1
 	 */
-	public function __construct( $main_path, $host_path, $avada_last_version, $avada_new_version ) {
+	public function __construct( $main_path, $host_path, $avada_last_version, $avada_new_version, $host_name ) {
 		$this->avada_last_version                = $avada_last_version;
 		$this->avada_new_version                 = $avada_new_version;
 		$this->avada_new_files_temp_path         = $main_path . '01-temp-new-version-files/';
@@ -73,14 +74,15 @@ class Avada {
 		$this->current_avada_theme_path          = '../' . $host_path . 'wp-content/themes/Avada/';
 		$this->current_avada_fusion_builder_path = '../' . $host_path . 'wp-content/plugins/fusion-builder/';
 		$this->current_avada_fusion_core_path    = '../' . $host_path . 'wp-content/plugins/fusion-core/';
+		$this->last_version_avada_path           = $this->avada_older_version_path . $this->avada_last_version . '-' . $host_name . '/';
 
 	}
 
-	public function avada_last_version(  ) {
+	public function avada_last_version() {
 		return $this->avada_last_version;
 	}
 
-	public function avada_new_version(  ) {
+	public function avada_new_version() {
 		return $this->avada_new_version;
 	}
 
@@ -122,6 +124,10 @@ class Avada {
 
 	public function current_avada_fusion_core_path() {
 		return $this->current_avada_fusion_core_path;
+	}
+
+	public function last_version_avada_path() {
+		return $this->last_version_avada_path;
 	}
 
 

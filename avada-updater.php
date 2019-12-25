@@ -77,7 +77,13 @@ class  Avada_Updater {
 		 * If they don't exist, we will create theme.
 		 * =================================================================
 		 * */
-		$this->check_important_directory_exist($this->important_directories);
+		$this->check_important_directory_exist( $this->important_directories );
+		/*
+		 * =====================================================
+		 * moving old avada files and change them with new files
+		 * =====================================================
+		 * */
+		$this->transfer_avada_new_files();
 
 	}
 
@@ -92,13 +98,23 @@ class  Avada_Updater {
 		$this->script_path                = $primary_values['script_path'];
 		$this->primary_setting_obj        = new Avada_Setting( $this->script_path );
 		$this->path_obj                   = new Path( $this->primary_setting_obj );
-		$this->avada_obj                  = new Avada( $this->path_obj->main_path(), $this->path_obj->host_path(),
+		$this->avada_obj                  = new Avada(
+			$this->path_obj->main_path(),
+			$this->path_obj->host_path(),
 			$this->primary_setting_obj->avada_last_version(),
-			$this->primary_setting_obj->avada_new_version() );
-		$this->backup_obj                 = new Files_Backup( $this->path_obj->main_path(), $this->path_obj->host_name(),
-			$this->path_obj->host_path() );
-		$this->updraft_obj                = new Updraft( $this->path_obj->main_path(), $this->path_obj->host_path(),
-			$this->primary_setting_obj->domain_name() );
+			$this->primary_setting_obj->avada_new_version(),
+			$this->path_obj->host_name()
+		);
+		$this->backup_obj                 = new Files_Backup(
+			$this->path_obj->main_path(),
+			$this->path_obj->host_name(),
+			$this->path_obj->host_path()
+		);
+		$this->updraft_obj                = new Updraft(
+			$this->path_obj->main_path(),
+			$this->path_obj->host_path(),
+			$this->primary_setting_obj->domain_name()
+		);
 		$this->files_process_obj          = new Files_Process();
 		$this->htaccess_lite_speed_config = $primary_values['htaccess_lite_speed_config'];
 		/*
@@ -215,14 +231,36 @@ class  Avada_Updater {
 
 	public function check_important_directory_exist( $important_directories ) {
 		foreach ( $important_directories as $important_directory ) {
-			$temp_message = $this->files_process_obj->create_directory_if_not_exist($important_directory ['path'],$important_directory ['type']);
-			if ($temp_message !== false ) {
-				$this->files_process_obj->append( $temp_message, $this->path_obj->main_log_file() );
+			$temp_result = $this->files_process_obj->make_directory_if_not_exist( $important_directory ['path'], $important_directory ['type'] );
+			if ( $temp_result['type'] == 'successful' ) {
+				$this->files_process_obj->append( $temp_result['message'], $this->path_obj->main_log_file() );
 			}
 		}
 		$this->files_process_obj->append( 'End of checking to be existing important directories', $this->path_obj->main_log_file() );
 		$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file() );
 
+	}
+
+	public function transfer_avada_new_files() {
+		$temp_result = $this->files_process_obj->make_directory_if_not_exist( $this->avada_obj->last_version_avada_path(),
+			'keep older files of avada' );
+		$this->files_process_obj->append( $temp_result['message'], $this->path_obj->main_log_file() );
+		if ( $temp_result['type'] == 'un-successful' ) {
+			die( '<h2>You can not continue!!!</h2>' );
+		}
+
+		/*if ( $update_site_count == 1 ) {
+			if ( ! msn_is_dir_empty( $avada_new_version_path ) ) {
+				msn_move_all_files( $avada_new_version_path, $last_version_avada_path, $main_log_file );
+				msn_move_all_files( $avada_new_files_temp_path, $avada_new_version_path, $main_log_file );
+				msn_write_on_log_file( msn_section_separator(), $main_log_file );
+			} else {
+				$msn_message_for_empty_dir = 'There is nothing to archive last Avada files: ' . date( 'Y-m-d  H:i:s' );
+				msn_write_on_log_file( $msn_message_for_empty_dir, $main_log_file );
+				msn_move_all_files( $avada_new_files_temp_path, $avada_new_version_path, $main_log_file );
+				msn_write_on_log_file( msn_section_separator(), $main_log_file );
+			}
+		}*/
 	}
 }
 
@@ -243,8 +281,8 @@ var_dump( $updater_obj->path_obj );
 var_dump( $updater_obj->avada_obj );
 var_dump( $updater_obj->backup_obj );
 var_dump( $updater_obj->updraft_obj );
-var_dump($updater_obj->critical_files);
-var_dump($updater_obj->important_directories);
+var_dump( $updater_obj->critical_files );
+var_dump( $updater_obj->important_directories );
 
 /*
 
