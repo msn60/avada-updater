@@ -94,12 +94,24 @@ class Avada {
 		return $this->avada_new_theme_file;
 	}
 
+	public function set_avada_new_theme_file( $avada_new_theme_file ) {
+		$this->avada_new_theme_file = $avada_new_theme_file;
+	}
+
 	public function avada_new_fusion_builder_file() {
 		return $this->avada_new_fusion_builder_file;
 	}
 
+	public function set_avada_new_fusion_builder_file( $avada_new_fusion_builder_file ) {
+		$this->avada_new_fusion_builder_file = $avada_new_fusion_builder_file;
+	}
+
 	public function avada_new_fusion_core_file() {
 		return $this->avada_new_fusion_core_file;
+	}
+
+	public function set_avada_new_fusion_core_file( $avada_new_fusion_core_file ) {
+		$this->avada_new_fusion_core_file = $avada_new_fusion_core_file;
 	}
 
 	public function avada_older_version_path() {

@@ -84,6 +84,13 @@ class  Avada_Updater {
 		 * =====================================================
 		 * */
 		$this->transfer_avada_new_files();
+		/*
+		 * ===============================
+		 * Assign new path for Avada files
+		 * ===============================
+		 * */
+		$this->set_new_path_for_Avada_files();
+
 
 	}
 
@@ -254,7 +261,7 @@ class  Avada_Updater {
 				$first_moving_results = $this->files_process_obj->move_all_files_in_directory(
 					$this->avada_obj->avada_new_version_path(), $this->avada_obj->last_version_avada_path()
 				);
-				foreach ( $first_moving_results as $first_moving_result) {
+				foreach ( $first_moving_results as $first_moving_result ) {
 					$this->files_process_obj->append( $first_moving_result['message'], $this->path_obj->main_log_file() );
 				}
 
@@ -265,12 +272,18 @@ class  Avada_Updater {
 			$second_moving_results = $this->files_process_obj->move_all_files_in_directory(
 				$this->avada_obj->avada_new_files_temp_path(), $this->avada_obj->avada_new_version_path()
 			);
-			foreach ( $second_moving_results as $second_moving_result) {
+			foreach ( $second_moving_results as $second_moving_result ) {
 				$this->files_process_obj->append( $second_moving_result['message'], $this->path_obj->main_log_file() );
 			}
 
 			$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file() );
 		}
+	}
+
+	public function set_new_path_for_Avada_files() {
+		$this->avada_obj->set_avada_new_theme_file( $this->avada_obj->avada_new_version_path() . 'avada-new.zip' );
+		$this->avada_obj->set_avada_new_fusion_builder_file( $this->avada_obj->avada_new_version_path() . 'fusion-builder-new.zip' );
+		$this->avada_obj->set_avada_new_fusion_core_file( $this->avada_obj->avada_new_version_path() . 'fusion-core-new.zip' );
 	}
 }
 
