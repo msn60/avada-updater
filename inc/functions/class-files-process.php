@@ -95,20 +95,20 @@ class Files_Process {
 			$result = mkdir( $path, 0755 );
 			if ( $result === true ) {
 				return [
-					'message'             => "The directory for {$type} was created succesfully at: " . date( 'Y-m-d H:i:s' ) . '.',
-					'type' => 'successful',
+					'message' => "The directory for {$type} was created succesfully at: " . date( 'Y-m-d H:i:s' ) . '.',
+					'type'    => 'successful',
 				];
 			} else {
 				return [
-					'message'             => "The directory for {$type} was not succesfully at: " . date( 'Y-m-d H:i:s' ) . '!!!',
-					'type' => 'un-successful',
+					'message' => "The directory for {$type} was not succesfully at: " . date( 'Y-m-d H:i:s' ) . '!!!',
+					'type'    => 'un-successful',
 				];
 
 			}
 		} else {
 			return [
-				'message'             => "The directory {$type} was already existed.",
-				'type' => 'already-exist',
+				'message' => "The directory {$type} was already existed.",
+				'type'    => 'already-exist',
 			];
 		}
 
@@ -118,17 +118,76 @@ class Files_Process {
 	/*
 	 * Check is directory empty or not
 	 * */
-	function is_dir_empty( $dir_name ) {
+	public function is_dir_empty( $dir_name ) {
 		if ( ! is_dir( $dir_name ) ) {
-			return 'is-file';
+			return [
+				'type' => 'is-file',
+			];
 		}
 		foreach ( scandir( $dir_name ) as $file ) {
 			if ( ! in_array( $file, array( '.', '..', '.svn', '.git' ) ) ) {
-				return 'not-empty-dir';
+				return [
+					'type' => 'not-empty-dir',
+				];
 			}
 		}
 
-		return 'is-empty-dir';
+		return [
+			'type' => 'is-empty-dir',
+		];
+	}
+
+	public function move_all_files_in_directory( $dir, $new_dir, $unwanted_files = [] ) {
+		// Open a known directory, and proceed to read its contents
+		if ( is_dir( $dir ) ) {
+			if ( $dh = opendir( $dir ) ) {
+				$results[] = null;
+				while ( ( $file = readdir( $dh ) ) !== false ) {
+					//exclude unwanted
+					if ( $file == "." ) {
+						continue;
+					}
+					if ( $file == ".." ) {
+						continue;
+					}
+					if ( ! empty( $unwanted_files ) ) {
+						foreach ( $unwanted_files as $unwanted_file ) {
+							if ( $file == $unwanted_file ) {
+								continue 2;
+							}
+						}
+					}
+
+					//if ($file=="index.php") continue; for example if you have index.php in the folder
+					if ( rename( $dir . '/' . $file, $new_dir . '/' . $file ) ) {
+						$message   = "{$file} is copied in {$new_dir} successfully at: " . date( 'Y-m-d H:i:s' ) . '.';
+						$results[] = [
+							'type'    => 'successful',
+							'message' => $message,
+						];
+
+						//if files you are moving are images you can print it from
+						//new folder to be sure they are there
+					} else {
+						$message   = "{$file} was successfully copied in {$new_dir}  at: " . date( 'Y-m-d H:i:s' ) . '.';
+						$results[] = [
+							'type'    => 'un-successful',
+							'message' => $message,
+						];
+					}
+				}
+				closedir( $dh );
+
+				return $results;
+			}
+		}
+
+		return [
+			[
+				'type'    => 'un-successful',
+				'message' => "<< {$dir}  >> is not a valid dir!!!"
+			]
+		];
 	}
 
 }

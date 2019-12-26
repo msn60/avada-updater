@@ -249,18 +249,28 @@ class  Avada_Updater {
 			die( '<h2>You can not continue!!!</h2>' );
 		}
 
-		/*if ( $update_site_count == 1 ) {
-			if ( ! msn_is_dir_empty( $avada_new_version_path ) ) {
-				msn_move_all_files( $avada_new_version_path, $last_version_avada_path, $main_log_file );
-				msn_move_all_files( $avada_new_files_temp_path, $avada_new_version_path, $main_log_file );
-				msn_write_on_log_file( msn_section_separator(), $main_log_file );
+		if ( $this->primary_setting_obj->update_site_count() == 1 ) {
+			if ( $this->files_process_obj->is_dir_empty( $this->avada_obj->avada_new_version_path() )['type'] == 'not-empty-dir' ) {
+				$first_moving_results = $this->files_process_obj->move_all_files_in_directory(
+					$this->avada_obj->avada_new_version_path(), $this->avada_obj->last_version_avada_path()
+				);
+				foreach ( $first_moving_results as $first_moving_result) {
+					$this->files_process_obj->append( $first_moving_result['message'], $this->path_obj->main_log_file() );
+				}
+
 			} else {
-				$msn_message_for_empty_dir = 'There is nothing to archive last Avada files: ' . date( 'Y-m-d  H:i:s' );
-				msn_write_on_log_file( $msn_message_for_empty_dir, $main_log_file );
-				msn_move_all_files( $avada_new_files_temp_path, $avada_new_version_path, $main_log_file );
-				msn_write_on_log_file( msn_section_separator(), $main_log_file );
+				$message_for_empty_dir = 'There is nothing to archive last Avada files: ' . date( 'Y-m-d  H:i:s' );
+				$this->files_process_obj->append( $message_for_empty_dir, $this->path_obj->main_log_file() );
 			}
-		}*/
+			$second_moving_results = $this->files_process_obj->move_all_files_in_directory(
+				$this->avada_obj->avada_new_files_temp_path(), $this->avada_obj->avada_new_version_path()
+			);
+			foreach ( $second_moving_results as $second_moving_result) {
+				$this->files_process_obj->append( $second_moving_result['message'], $this->path_obj->main_log_file() );
+			}
+
+			$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file() );
+		}
 	}
 }
 
