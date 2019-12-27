@@ -190,4 +190,36 @@ class Files_Process {
 		];
 	}
 
+	/*
+	* Move file to another directory
+	* */
+	public function move_file( $old_path, $new_path, $type = 'normal' ) {
+		$moving_message = [];
+		if ( $type == 'zipped-site-backup' ) {
+			$moving_message = [
+				'successful'   => 'Zipped whole site backeup file is successfully move to backup directory on : ',
+				'unsuccessful' => 'Unfortunately we can not move zipped whole site backup file to backup directory!!! The Date for this message is : ',
+			];
+		} else {
+			$moving_message = [
+				'successful'   => "File: << {$old_path} >> is successfully move to << {$new_path} >>  on : ",
+				'unsuccessful' => "Unfortunately we can not move << {$old_path} >> to << {$new_path} >> !!! The Date for this message is : ",
+			];
+		}
+
+		$temp = rename( $old_path, $new_path );
+		if ( $temp ) {
+			return [
+				'type'    => 'successful',
+				'message' => $moving_message['successful'] . date( 'Y-m-d H:i:s' ) . '.',
+			];
+		} else {
+			return [
+				'type'    => 'un-successful',
+				'message' => $moving_message['unsuccessful'] . date( 'Y-m-d H:i:s' ) . '.',
+			];
+		}
+
+	}
+
 }

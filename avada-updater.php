@@ -90,6 +90,30 @@ class  Avada_Updater {
 		 * ===============================
 		 * */
 		$this->set_new_path_for_Avada_files();
+		/*
+		 * ==================================
+		 * move updraft files (if it's exist)
+		 * ==================================
+		 * */
+		if ( $this->updraft_obj->is_check_updraft() ) {
+			$this->move_updraft_extra_files();
+		}
+		/*
+		 * ===========================================
+		 * Zip whole site and move to backup directory
+		 * ===========================================
+		 * */
+		$this->backup_whole_site();
+
+
+		/*
+		 * =====================================================
+		 * Return updraft files to its directory in WordPress site
+		 * =====================================================
+		 * */
+		if ( $this->updraft_obj->is_check_updraft() ) {
+			$this->move_updraft_extra_files( 'move-to-wp-directory' );
+		}
 
 
 	}
@@ -115,7 +139,8 @@ class  Avada_Updater {
 		$this->backup_obj                 = new Files_Backup(
 			$this->path_obj->main_path(),
 			$this->path_obj->host_name(),
-			$this->path_obj->host_path()
+			$this->path_obj->host_path(),
+			$this->primary_setting_obj->has_backup_zip()
 		);
 		$this->updraft_obj                = new Updraft(
 			$this->path_obj->main_path(),
@@ -258,25 +283,32 @@ class  Avada_Updater {
 
 		if ( $this->primary_setting_obj->update_site_count() == 1 ) {
 			if ( $this->files_process_obj->is_dir_empty( $this->avada_obj->avada_new_version_path() )['type'] == 'not-empty-dir' ) {
-				$first_moving_results = $this->files_process_obj->move_all_files_in_directory(
-					$this->avada_obj->avada_new_version_path(), $this->avada_obj->last_version_avada_path()
+				$this->move_all_helper(
+					$this->avada_obj->avada_new_version_path(),
+					$this->avada_obj->last_version_avada_path(),
+					$this->path_obj->main_log_file()
 				);
-				foreach ( $first_moving_results as $first_moving_result ) {
-					$this->files_process_obj->append( $first_moving_result['message'], $this->path_obj->main_log_file() );
-				}
 
 			} else {
 				$message_for_empty_dir = 'There is nothing to archive last Avada files: ' . date( 'Y-m-d  H:i:s' );
 				$this->files_process_obj->append( $message_for_empty_dir, $this->path_obj->main_log_file() );
 			}
-			$second_moving_results = $this->files_process_obj->move_all_files_in_directory(
-				$this->avada_obj->avada_new_files_temp_path(), $this->avada_obj->avada_new_version_path()
+			$this->move_all_helper(
+				$this->avada_obj->avada_new_files_temp_path(),
+				$this->avada_obj->avada_new_version_path(),
+				$this->path_obj->main_log_file(),
+				true
 			);
-			foreach ( $second_moving_results as $second_moving_result ) {
-				$this->files_process_obj->append( $second_moving_result['message'], $this->path_obj->main_log_file() );
-			}
+		}
+	}
 
-			$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file() );
+	public function move_all_helper( $dir, $new_dir, $log_file, $need_separator = false, $unwanted_files = null ) {
+		$results = $this->files_process_obj->move_all_files_in_directory( $dir, $new_dir, $unwanted_files );
+		foreach ( $results as $result ) {
+			$this->files_process_obj->append( $result['message'], $log_file );
+		}
+		if ( $need_separator ) {
+			$this->files_process_obj->append_section_separator( $log_file );
 		}
 	}
 
@@ -284,6 +316,48 @@ class  Avada_Updater {
 		$this->avada_obj->set_avada_new_theme_file( $this->avada_obj->avada_new_version_path() . 'avada-new.zip' );
 		$this->avada_obj->set_avada_new_fusion_builder_file( $this->avada_obj->avada_new_version_path() . 'fusion-builder-new.zip' );
 		$this->avada_obj->set_avada_new_fusion_core_file( $this->avada_obj->avada_new_version_path() . 'fusion-core-new.zip' );
+	}
+
+	public function move_updraft_extra_files( $type = 'move-to-temp' ) {
+
+		if ( $type == 'move-to-temp' ) {
+			echo '<h2>back up results for updraft files</h2>';
+			$this->move_all_helper(
+				$this->updraft_obj->updraft_path(),
+				$this->updraft_obj->updraft_bak_path(),
+				$this->path_obj->main_log_file(),
+				true,
+				$this->updraft_obj->updraft_unwanted_files()
+			);
+		} else {
+			echo '<h2>Results for moving updraft files to original directory</h2>';
+			$this->move_all_helper(
+				$this->updraft_obj->updraft_bak_path(),
+				$this->updraft_obj->updraft_path(),
+				$this->path_obj->main_log_file(),
+				true
+			);
+		}
+
+	}
+
+	public function backup_whole_site() {
+		if ( $this->primary_setting_obj->has_backup_zip() ) {
+			$zipping_message = 'No need to zip Data! The Date for checking is : ' . date( 'Y-m-d  H:i:s' );
+			$this->files_process_obj->append( $zipping_message, $this->path_obj->main_log_file() );
+			if ( file_exists( $this->backup_obj->backup_zip_file_path() ) ) {
+				$backup_moving_result = $this->files_process_obj->move_file(
+					$this->backup_obj->backup_zip_file_path(),
+					$this->backup_obj->whole_site_backup_path(). $this->backup_obj->backup_zip_file_name(),
+					$type = 'zipped-site-backup'
+				);
+				$this->files_process_obj->append( $backup_moving_result['message'], $this->path_obj->main_log_file() );
+
+			} else {
+				$file_existing_message = 'There is no Zip file to move!!! The Date for checking is :'. date( 'Y-m-d  H:i:s' );
+				$this->files_process_obj->append( $file_existing_message, $this->path_obj->main_log_file() );
+			}
+		}
 	}
 }
 

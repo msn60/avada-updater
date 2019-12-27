@@ -28,9 +28,13 @@ class Files_Backup {
 	private $backup_zip_file_name;
 	private $backup_zip_file_path;
 
-	public function __construct( $main_path, $host_name, $host_path ) {
+	public function __construct( $main_path, $host_name, $host_path, $has_file_backup ) {
 		$this->whole_site_backup_path = $main_path . '05-whole-site-backup/';
-		$this->backup_zip_file_name   = $host_name . '-files-backup-' . date( 'Ymd-Hi' ) . '.zip';
+		if ($has_file_backup === false ) {
+			$this->backup_zip_file_name   = $host_name . '-files-backup-' . date( 'Ymd-Hi' ) . '.zip';
+		} else {
+			$this->backup_zip_file_name   = $host_name . '-files-backup-' . date( 'Ymd' ) . '.zip';
+		}
 		$this->backup_zip_file_path   = '../' . $host_path . $this->backup_zip_file_name;
 
 	}
