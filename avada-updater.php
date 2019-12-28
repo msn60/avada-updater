@@ -103,7 +103,7 @@ class  Avada_Updater {
 		 * Zip whole site and move to backup directory
 		 * ===========================================
 		 * */
-		$this->backup_whole_site();
+		$this->backup_whole_site($this->path_obj->main_log_file());
 
 
 		/*
@@ -341,23 +341,33 @@ class  Avada_Updater {
 
 	}
 
-	public function backup_whole_site() {
+	public function backup_whole_site($log_file) {
 		if ( $this->primary_setting_obj->has_backup_zip() ) {
 			$zipping_message = 'No need to zip Data! The Date for checking is : ' . date( 'Y-m-d  H:i:s' );
-			$this->files_process_obj->append( $zipping_message, $this->path_obj->main_log_file() );
+			$this->files_process_obj->append( $zipping_message, $log_file );
 			if ( file_exists( $this->backup_obj->backup_zip_file_path() ) ) {
 				$backup_moving_result = $this->files_process_obj->move_file(
 					$this->backup_obj->backup_zip_file_path(),
-					$this->backup_obj->whole_site_backup_path(). $this->backup_obj->backup_zip_file_name(),
+					$this->backup_obj->whole_site_backup_path() . $this->backup_obj->backup_zip_file_name(),
 					$type = 'zipped-site-backup'
 				);
-				$this->files_process_obj->append( $backup_moving_result['message'], $this->path_obj->main_log_file() );
+				$this->files_process_obj->append( $backup_moving_result['message'], $log_file );
 
 			} else {
-				$file_existing_message = 'There is no Zip file to move!!! The Date for checking is :'. date( 'Y-m-d  H:i:s' );
-				$this->files_process_obj->append( $file_existing_message, $this->path_obj->main_log_file() );
+				$file_existing_message = 'There is no Zip file to move!!! The Date for checking is :' . date( 'Y-m-d  H:i:s' );
+				$this->files_process_obj->append( $file_existing_message, $log_file );
+			}
+		} else {
+
+			//$result_of_zipping = msn_zip_data( $main_wordpress_path, $whole_site_backup_path . 'backup.zip', 'windows' );
+			$result_of_zipping = $this->files_process_obj->zip_data( $this->path_obj->wordpress_path(), $this->backup_obj->whole_site_backup_path() . $this->backup_obj->backup_zip_file_name() );
+			if ( $result_of_zipping['result'] === false ) {
+				$this->files_process_obj->append( $result_of_zipping['message'], $log_file );
+			} else {
+				$this->files_process_obj->append( $result_of_zipping['message'], $log_file );
 			}
 		}
+		$this->files_process_obj->append_section_separator( $log_file );
 	}
 }
 

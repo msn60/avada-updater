@@ -222,4 +222,126 @@ class Files_Process {
 
 	}
 
+	/*
+	 * function to zip data with its related permissions in linux os
+	 * */
+	public function zip_data( $source, $destination, $os = 'linux' ) {
+
+		$successful_zipping_message   = 'Zipping whole site files backup was successfully done on: ' . date( 'Y-m-d  H:i:s' ) . '.';
+		$unsuccessful_zipping_message = 'Unfortunately we can not zip whole of site file! The Date for this message: ' . date( 'Y-m-d  H:i:s' )
+		                                . '!!!';
+		$unsuccessful_extension_load  = 'Unfortunately we can not load zip extension! The Date for this message: ' . date( 'Y-m-d  H:i:s' )
+		                                . '!!!';
+		if ( $os == 'windows' ) {
+			if ( extension_loaded( 'zip' ) ) {
+				if ( file_exists( $source ) ) {
+					$zip = new \ZipArchive();
+					if ( $zip->open( $destination, \ZIPARCHIVE::CREATE ) ) {
+						$source = realpath( $source );
+						if ( is_dir( $source ) ) {
+							$iterator = new \RecursiveDirectoryIterator( $source );
+							// skip dot files while iterating
+							$iterator->setFlags( \RecursiveDirectoryIterator::SKIP_DOTS );
+							$files = new \RecursiveIteratorIterator( $iterator, \RecursiveIteratorIterator::SELF_FIRST );
+							foreach ( $files as $file ) {
+								$file = realpath( $file );
+								if ( is_dir( $file ) ) {
+									$zip->addEmptyDir( str_replace( $source . '', '', $file . '' ) );
+								} else if ( is_file( $file ) ) {
+									$zip->addFromString( str_replace( $source . '', '', $file ), file_get_contents( $file ) );
+								}
+							}
+						} else if ( is_file( $source ) ) {
+							$zip->addFromString( basename( $source ), file_get_contents( $source ) );
+						}
+					}
+
+					$result = $zip->close();
+					if ( $result ) {
+						return [
+							'result'  => $result,
+							'message' => $successful_zipping_message,
+						];
+					} else {
+						return [
+							'result'  => $result,
+							'message' => $unsuccessful_zipping_message,
+						];
+					}
+				}
+			}
+
+			return [
+				'result'  => false,
+				'message' => $unsuccessful_extension_load,
+			];
+
+		} else {
+			if ( extension_loaded( 'zip' ) ) {
+				if ( file_exists( $source ) ) {
+
+					$templateArchive = new \ZipArchive();
+					$templateArchive->open( $destination,
+						\ZipArchive::CREATE | \ZipArchive::OVERWRITE );
+
+					$files = new \RecursiveIteratorIterator(
+						new \RecursiveDirectoryIterator( $source ),
+						\RecursiveIteratorIterator::LEAVES_ONLY
+					);
+
+					foreach ( $files as $name => $file ) {
+
+						// Get real and relative path for current file
+						$filePath = $file->getRealPath();
+
+						// relative path is full path, reduced with length of templateDir string and 11 more chars for /templates/
+						$relativePath = substr( $filePath, strlen( $source ) );
+
+						// Add regular files
+						if ( ! $file->isDir() ) {
+							// Add current file to archive
+							$templateArchive->addFile( $filePath, $relativePath );
+						} elseif ( substr( $relativePath, - 2 ) === "/." ) {
+							// Remove the dot representing the current directory
+							$relativePath = substr( $relativePath, 0, - 1 );
+							// Add current directory to archive
+							$templateArchive->addEmptyDir( $relativePath );
+						} else {
+							continue;
+						}
+
+						$templateArchive->setExternalAttributesName( $relativePath,
+							\ZipArchive::OPSYS_UNIX,
+							fileperms( $filePath ) << 16 );
+					}
+
+					// Template Zip archive will be created only after closing object
+					$result = $templateArchive->close();
+
+					if ( $result ) {
+						return [
+							'result'  => $result,
+							'message' => $successful_zipping_message,
+						];
+					} else {
+						return [
+							'result'  => $result,
+							'message' => $unsuccessful_zipping_message,
+						];
+					}
+
+					//return $zip->close();
+				}
+
+			}
+
+			return [
+				'result'  => false,
+				'message' => $unsuccessful_extension_load,
+			];
+
+		}
+	}
+
+
 }

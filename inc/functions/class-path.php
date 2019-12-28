@@ -139,6 +139,8 @@ class Path {
 		return $this->htaccess_file_path;
 	}
 
+
+
 }
 
 
