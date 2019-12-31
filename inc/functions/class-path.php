@@ -24,6 +24,20 @@ use Updater\Inc\Config\Primary_Setting;
  *
  * @package    Updater\Inc\Functions
  * @author     Mehdi Soltani <soltani.n.mehdi@gmail.com>
+ * @property string $script_directory
+ * @property string $script_path
+ * @property string $domain_name
+ * @property string $main_path
+ * @property string $main_start_path
+ * @property string $host_name
+ * @property string $host_path
+ * @property string $wordpress_path
+ * @property string $main_theme_path
+ * @property string $main_plugin_path
+ * @property string $log_files_path
+ * @property string $main_log_file
+ * @property string $htaccess_file_path
+ * @property string $wordpress_htaccess_file_path
  */
 class Path {
 
@@ -48,10 +62,10 @@ class Path {
 	public function __construct(
 		Primary_Setting $primary_setting_obj
 	) {
-		$this->script_directory = $primary_setting_obj->script_directory();
-		$this->script_path      = $primary_setting_obj->script_path();
-		$this->domain_name      = $primary_setting_obj->domain_name();
-		$this->main_path        = $primary_setting_obj->main_path();
+		$this->script_directory = $primary_setting_obj->script_directory;
+		$this->script_path      = $primary_setting_obj->script_path;
+		$this->domain_name      = $primary_setting_obj->domain_name;
+		$this->main_path        = $primary_setting_obj->main_path;
 		$this->main_start_path  = $this->set_main_start_path();
 		$this->host_name        = $this->set_host_config( $this->domain_name )['host_name'];
 		$this->host_path        = $this->set_host_config( $this->domain_name )['host_path'];
@@ -96,49 +110,22 @@ class Path {
 
 	}
 
-	public function main_path() {
-		return $this->main_path;
+	/**
+	 * @param $property
+	 *
+	 * @return mixed
+	 */
+	public function __get( $property ) {
+		return $this->$property;
 	}
 
 	/**
-	 * @return mixed
+	 * @param $name
+	 * @param $value
 	 */
-	public function main_start_path() {
-		return $this->main_start_path;
+	public function __set( $name , $value ) {
+		$this->$name = $value;
 	}
-
-	public function host_name() {
-		return $this->host_name;
-	}
-
-	public function host_path() {
-		return $this->host_path;
-	}
-
-	public function wordpress_path() {
-		return $this->wordpress_path;
-	}
-
-	public function main_theme_path() {
-		return $this->main_theme_path;
-	}
-
-	public function main_plugin_path() {
-		return $this->main_plugin_path;
-	}
-
-	public function log_files_path() {
-		return $this->log_files_path;
-	}
-
-	public function main_log_file() {
-		return $this->main_log_file;
-	}
-
-	public function htaccess_file_path() {
-		return $this->htaccess_file_path;
-	}
-
 
 
 }

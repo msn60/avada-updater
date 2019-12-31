@@ -88,6 +88,23 @@ class Files_Process {
 	}
 
 	/*
+	 * write several results on log file continuously
+	 * */
+	public function several_appends( $items, $log_file, $starting_message = null, $ending_message = null ) {
+		if ( $starting_message !== null ) {
+			echo "<h2>{$starting_message}</h2>";
+		}
+		foreach ( $items as $item ) {
+			$this->append( $item['message'], $log_file );
+		}
+		if ( $ending_message !== null ) {
+			echo "<h2>{$ending_message}</h2>";
+		}
+		$this->append_section_separator( $log_file );
+
+	}
+
+	/*
 	 * check directory exists and if not, it will create
 	 * */
 	public function make_directory_if_not_exist( $path, $type ) {
@@ -223,8 +240,79 @@ class Files_Process {
 	}
 
 	/*
+	 * Function to Copy all folders and files in a directory
+	 * */
+	public function copy_directory( $source, $destination ) {
+		if ( is_dir( $source ) ) {
+			@mkdir( $destination );
+			$files = scandir( $source );
+			foreach ( $files as $file ) {
+				if ( $file != "." && $file != ".." ) {
+					$this->copy_directory( "$source/$file", "$destination/$file" );
+				}
+			}
+		} else if ( file_exists( $source ) ) {
+			$result = copy( $source, $destination );
+			if ( ! $result ) {
+				return [
+					'type'    => false,
+					'message' => "We can not copy directory from << {$source} >> to << {$destination} >>  on: " . date( 'Y-m-d  H:i:s' ) . '!!!',
+				];
+			}
+		}
+
+		return [
+			'type'    => true,
+			'message' => "The copy of directory from << {$source} >> to << {$destination} >> was successful on: " . date( 'Y-m-d  H:i:s' ) . '.',
+		];
+	}
+
+	/*
+	 * Bulk copy function for copying many files in one process
+	 * */
+	public function files_bulk_copy( $list_items ) {
+		$results = [];
+		foreach ( $list_items as $list_item ) {
+			$results[] = $this->copy_file( $list_item['source_path'], $list_item['destination_file_name'] );
+		}
+
+		return $results;
+	}
+
+	/*
+	 * function to copy a file
+	 * */
+	public function copy_file( $source, $destination ) {
+		if ( file_exists( $source ) ) {
+
+			$success_message = "The copy from << {$source} >> to << {$destination} >> was successful on: " . date( 'Y-m-d  H:i:s' ) . '.';
+			$failed_message  = "We can not copy from << {$source} >> to << {$destination} >> on: " . date( 'Y-m-d  H:i:s' ) . '!!!';
+			$result          = copy( $source, $destination );
+			if ( $result ) {
+				return [
+					'type'    => true,
+					'message' => $success_message,
+				];
+			} else {
+				return [
+					'type'    => false,
+					'message' => $failed_message,
+				];
+			}
+		} else {
+			return [
+				'type'    => false,
+				'message' => "Unfortunately << {$source} >> file is not exist. So we can not copy it on: " . date( 'Y-m-d  H:i:s' ) . '!!!',
+			];
+
+		}
+	}
+
+
+	/*
 	 * function to zip data with its related permissions in linux os
 	 * */
+
 	public function zip_data( $source, $destination, $os = 'linux' ) {
 
 		$successful_zipping_message   = 'Zipping whole site files backup was successfully done on: ' . date( 'Y-m-d  H:i:s' ) . '.';

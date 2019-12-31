@@ -66,7 +66,7 @@ class  Avada_Updater {
 		 * Checking critical directory and file before executing script
 		 * =============================================================
 		 * */
-		if ( $this->primary_setting_obj->update_site_count() == 1 ) {
+		if ( $this->primary_setting_obj->update_site_count == 1 ) {
 			foreach ( $this->critical_files as $critical_file ) {
 				$this->check_critical_files_exists( $critical_file['path'], $critical_file['type'] );
 			}
@@ -95,7 +95,7 @@ class  Avada_Updater {
 		 * move updraft files (if it's exist)
 		 * ==================================
 		 * */
-		if ( $this->updraft_obj->is_check_updraft() ) {
+		if ( $this->updraft_obj->is_check_updraft ) {
 			$this->move_updraft_extra_files();
 		}
 		/*
@@ -103,7 +103,13 @@ class  Avada_Updater {
 		 * Zip whole site and move to backup directory
 		 * ===========================================
 		 * */
-		$this->backup_whole_site($this->path_obj->main_log_file());
+		$this->backup_whole_site( $this->path_obj->main_log_file );
+		/*
+		 * ===========================
+		 * First: backup language file
+		 * ===========================
+		 * */
+		$this->backup_language_files();
 
 
 		/*
@@ -111,7 +117,7 @@ class  Avada_Updater {
 		 * Return updraft files to its directory in WordPress site
 		 * =====================================================
 		 * */
-		if ( $this->updraft_obj->is_check_updraft() ) {
+		if ( $this->updraft_obj->is_check_updraft ) {
 			$this->move_updraft_extra_files( 'move-to-wp-directory' );
 		}
 
@@ -130,22 +136,22 @@ class  Avada_Updater {
 		$this->primary_setting_obj        = new Avada_Setting( $this->script_path );
 		$this->path_obj                   = new Path( $this->primary_setting_obj );
 		$this->avada_obj                  = new Avada(
-			$this->path_obj->main_path(),
-			$this->path_obj->host_path(),
-			$this->primary_setting_obj->avada_last_version(),
-			$this->primary_setting_obj->avada_new_version(),
-			$this->path_obj->host_name()
+			$this->path_obj->main_path,
+			$this->path_obj->host_path,
+			$this->primary_setting_obj->avada_last_version,
+			$this->primary_setting_obj->avada_new_version,
+			$this->path_obj->host_name
 		);
 		$this->backup_obj                 = new Files_Backup(
-			$this->path_obj->main_path(),
-			$this->path_obj->host_name(),
-			$this->path_obj->host_path(),
-			$this->primary_setting_obj->has_backup_zip()
+			$this->path_obj->main_path,
+			$this->path_obj->host_name,
+			$this->path_obj->host_path,
+			$this->primary_setting_obj->has_backup_zip
 		);
 		$this->updraft_obj                = new Updraft(
-			$this->path_obj->main_path(),
-			$this->path_obj->host_path(),
-			$this->primary_setting_obj->domain_name()
+			$this->path_obj->main_path,
+			$this->path_obj->host_path,
+			$this->primary_setting_obj->domain_name
 		);
 		$this->files_process_obj          = new Files_Process();
 		$this->htaccess_lite_speed_config = $primary_values['htaccess_lite_speed_config'];
@@ -163,23 +169,23 @@ class  Avada_Updater {
 		return
 			[
 				[
-					'path' => $this->path_obj->main_path(),
+					'path' => $this->path_obj->main_path,
 					'type' => 'main_path',
 				],
 				[
-					'path' => $this->avada_obj->avada_new_files_temp_path(),
+					'path' => $this->avada_obj->avada_new_files_temp_path,
 					'type' => 'avada_file_path',
 				],
 				[
-					'path' => $this->avada_obj->avada_new_theme_file(),
+					'path' => $this->avada_obj->avada_new_theme_file,
 					'type' => 'avada_theme_file',
 				],
 				[
-					'path' => $this->avada_obj->avada_new_fusion_builder_file(),
+					'path' => $this->avada_obj->avada_new_fusion_builder_file,
 					'type' => 'avada_fusion_builder_file',
 				],
 				[
-					'path' => $this->avada_obj->avada_new_fusion_core_file(),
+					'path' => $this->avada_obj->avada_new_fusion_core_file,
 					'type' => 'avada_fusion_core_file',
 				],
 			];
@@ -189,27 +195,27 @@ class  Avada_Updater {
 		return
 			[
 				[
-					'path' => $this->avada_obj->avada_new_version_path(),
+					'path' => $this->avada_obj->avada_new_version_path,
 					'type' => 'keeping new versions of Avada files',
 				],
 				[
-					'path' => $this->avada_obj->avada_older_version_path(),
+					'path' => $this->avada_obj->avada_older_version_path,
 					'type' => 'keeping older versions of Avada files',
 				],
 				[
-					'path' => $this->avada_obj->avada_lang_path(),
+					'path' => $this->avada_obj->avada_lang_path,
 					'type' => 'keeping language files of Avada',
 				],
 				[
-					'path' => $this->updraft_obj->updraft_bak_path(),
+					'path' => $this->updraft_obj->updraft_bak_path,
 					'type' => 'keeping extra updraft files',
 				],
 				[
-					'path' => $this->backup_obj->whole_site_backup_path(),
+					'path' => $this->backup_obj->whole_site_backup_path,
 					'type' => 'keeping whole site files for update process',
 				],
 				[
-					'path' => $this->path_obj->log_files_path(),
+					'path' => $this->path_obj->log_files_path,
 					'type' => 'keeping log files of update process',
 				],
 			];
@@ -219,12 +225,12 @@ class  Avada_Updater {
 
 		if ( $this->check_server_type() == 'litespeed' ) {
 			$msn_writing_message = $this->files_process_obj->check_prepend_htaccess_for_litespeed( $this->htaccess_lite_speed_config,
-				$this->path_obj->htaccess_file_path() );
+				$this->path_obj->htaccess_file_path );
 		} else {
 			$msn_writing_message = 'It is not LiteSpeed Server. So nothing write on htaccess file. Date is : ' . date( 'Y-m-d  H:i:s' ) . '.';
 		}
-		$this->files_process_obj->append( $msn_writing_message, $this->path_obj->main_log_file() );
-		$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file() );
+		$this->files_process_obj->append( $msn_writing_message, $this->path_obj->main_log_file );
+		$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file );
 
 
 	}
@@ -254,8 +260,8 @@ class  Avada_Updater {
 					break;
 			}
 
-			$this->files_process_obj->append( $error_message, $this->path_obj->main_log_file() );
-			$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file() );
+			$this->files_process_obj->append( $error_message, $this->path_obj->main_log_file );
+			$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file );
 			die( '<h2>You can not continue!!!</h2>' );
 		}
 
@@ -265,38 +271,38 @@ class  Avada_Updater {
 		foreach ( $important_directories as $important_directory ) {
 			$temp_result = $this->files_process_obj->make_directory_if_not_exist( $important_directory ['path'], $important_directory ['type'] );
 			if ( $temp_result['type'] == 'successful' ) {
-				$this->files_process_obj->append( $temp_result['message'], $this->path_obj->main_log_file() );
+				$this->files_process_obj->append( $temp_result['message'], $this->path_obj->main_log_file );
 			}
 		}
-		$this->files_process_obj->append( 'End of checking to be existing important directories', $this->path_obj->main_log_file() );
-		$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file() );
+		$this->files_process_obj->append( 'End of checking to be existing important directories', $this->path_obj->main_log_file );
+		$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file );
 
 	}
 
 	public function transfer_avada_new_files() {
-		$temp_result = $this->files_process_obj->make_directory_if_not_exist( $this->avada_obj->last_version_avada_path(),
+		$temp_result = $this->files_process_obj->make_directory_if_not_exist( $this->avada_obj->last_version_avada_path,
 			'keep older files of avada' );
-		$this->files_process_obj->append( $temp_result['message'], $this->path_obj->main_log_file() );
+		$this->files_process_obj->append( $temp_result['message'], $this->path_obj->main_log_file );
 		if ( $temp_result['type'] == 'un-successful' ) {
 			die( '<h2>You can not continue!!!</h2>' );
 		}
 
-		if ( $this->primary_setting_obj->update_site_count() == 1 ) {
-			if ( $this->files_process_obj->is_dir_empty( $this->avada_obj->avada_new_version_path() )['type'] == 'not-empty-dir' ) {
+		if ( $this->primary_setting_obj->update_site_count == 1 ) {
+			if ( $this->files_process_obj->is_dir_empty( $this->avada_obj->avada_new_version_path )['type'] == 'not-empty-dir' ) {
 				$this->move_all_helper(
-					$this->avada_obj->avada_new_version_path(),
-					$this->avada_obj->last_version_avada_path(),
-					$this->path_obj->main_log_file()
+					$this->avada_obj->avada_new_version_path,
+					$this->avada_obj->last_version_avada_path,
+					$this->path_obj->main_log_file
 				);
 
 			} else {
 				$message_for_empty_dir = 'There is nothing to archive last Avada files: ' . date( 'Y-m-d  H:i:s' );
-				$this->files_process_obj->append( $message_for_empty_dir, $this->path_obj->main_log_file() );
+				$this->files_process_obj->append( $message_for_empty_dir, $this->path_obj->main_log_file );
 			}
 			$this->move_all_helper(
-				$this->avada_obj->avada_new_files_temp_path(),
-				$this->avada_obj->avada_new_version_path(),
-				$this->path_obj->main_log_file(),
+				$this->avada_obj->avada_new_files_temp_path,
+				$this->avada_obj->avada_new_version_path,
+				$this->path_obj->main_log_file,
 				true
 			);
 		}
@@ -313,9 +319,9 @@ class  Avada_Updater {
 	}
 
 	public function set_new_path_for_Avada_files() {
-		$this->avada_obj->set_avada_new_theme_file( $this->avada_obj->avada_new_version_path() . 'avada-new.zip' );
-		$this->avada_obj->set_avada_new_fusion_builder_file( $this->avada_obj->avada_new_version_path() . 'fusion-builder-new.zip' );
-		$this->avada_obj->set_avada_new_fusion_core_file( $this->avada_obj->avada_new_version_path() . 'fusion-core-new.zip' );
+		$this->avada_obj->avada_new_theme_file = $this->avada_obj->avada_new_version_path . 'avada-new.zip';
+		$this->avada_obj->avada_new_fusion_builder_file = $this->avada_obj->avada_new_version_path . 'fusion-builder-new.zip' ;
+		$this->avada_obj->avada_new_fusion_core_file = $this->avada_obj->avada_new_version_path . 'fusion-core-new.zip';
 	}
 
 	public function move_updraft_extra_files( $type = 'move-to-temp' ) {
@@ -323,32 +329,65 @@ class  Avada_Updater {
 		if ( $type == 'move-to-temp' ) {
 			echo '<h2>back up results for updraft files</h2>';
 			$this->move_all_helper(
-				$this->updraft_obj->updraft_path(),
-				$this->updraft_obj->updraft_bak_path(),
-				$this->path_obj->main_log_file(),
+				$this->updraft_obj->updraft_path,
+				$this->updraft_obj->updraft_bak_path,
+				$this->path_obj->main_log_file,
 				true,
-				$this->updraft_obj->updraft_unwanted_files()
+				$this->updraft_obj->updraft_unwanted_files
 			);
 		} else {
 			echo '<h2>Results for moving updraft files to original directory</h2>';
 			$this->move_all_helper(
-				$this->updraft_obj->updraft_bak_path(),
-				$this->updraft_obj->updraft_path(),
-				$this->path_obj->main_log_file(),
+				$this->updraft_obj->updraft_bak_path,
+				$this->updraft_obj->updraft_path,
+				$this->path_obj->main_log_file,
 				true
 			);
 		}
 
 	}
 
-	public function backup_whole_site($log_file) {
-		if ( $this->primary_setting_obj->has_backup_zip() ) {
+	/**
+	 *
+	 */
+	public function backup_language_files() {
+		/*
+		 * Copy Farsi language files
+		 * */
+		$lang_list_items = [
+			[
+				'source_path'           => $this->avada_obj->current_avada_fusion_builder_mo_file,
+				'destination_file_name' => $this->avada_obj->backup_avada_fusion_builder_mo_file,
+			],
+			[
+				'source_path'           => $this->avada_obj->current_avada_fusion_builder_po_file,
+				'destination_file_name' => $this->avada_obj->backup_avada_fusion_builder_po_file,
+			],
+			[
+				'source_path'           => $this->avada_obj->current_avada_fusion_core_mo_file,
+				'destination_file_name' => $this->avada_obj->backup_avada_fusion_core_mo_file,
+			],
+			[
+				'source_path'           => $this->avada_obj->current_avada_fusion_core_po_file,
+				'destination_file_name' => $this->avada_obj->backup_avada_fusion_core_po_file,
+			],
+
+		];
+
+		$results = $this->files_process_obj->files_bulk_copy( $lang_list_items );
+		$this->files_process_obj->several_appends( $results, $this->path_obj->main_log_file, 'Start to backup lang files',
+			'End of backup lang files' );
+
+	}
+
+	public function backup_whole_site( $log_file ) {
+		if ( $this->primary_setting_obj->has_backup_zip ) {
 			$zipping_message = 'No need to zip Data! The Date for checking is : ' . date( 'Y-m-d  H:i:s' );
 			$this->files_process_obj->append( $zipping_message, $log_file );
-			if ( file_exists( $this->backup_obj->backup_zip_file_path() ) ) {
+			if ( file_exists( $this->backup_obj->backup_zip_file_path ) ) {
 				$backup_moving_result = $this->files_process_obj->move_file(
-					$this->backup_obj->backup_zip_file_path(),
-					$this->backup_obj->whole_site_backup_path() . $this->backup_obj->backup_zip_file_name(),
+					$this->backup_obj->backup_zip_file_path,
+					$this->backup_obj->whole_site_backup_path . $this->backup_obj->backup_zip_file_name,
 					$type = 'zipped-site-backup'
 				);
 				$this->files_process_obj->append( $backup_moving_result['message'], $log_file );
@@ -360,7 +399,8 @@ class  Avada_Updater {
 		} else {
 
 			//$result_of_zipping = msn_zip_data( $main_wordpress_path, $whole_site_backup_path . 'backup.zip', 'windows' );
-			$result_of_zipping = $this->files_process_obj->zip_data( $this->path_obj->wordpress_path(), $this->backup_obj->whole_site_backup_path() . $this->backup_obj->backup_zip_file_name() );
+			$result_of_zipping = $this->files_process_obj->zip_data( $this->path_obj->wordpress_path,
+				$this->backup_obj->whole_site_backup_path. $this->backup_obj->backup_zip_file_name );
 			if ( $result_of_zipping['result'] === false ) {
 				$this->files_process_obj->append( $result_of_zipping['message'], $log_file );
 			} else {

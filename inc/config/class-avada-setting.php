@@ -23,6 +23,11 @@ use Updater\Inc\Config\Primary_Setting;
  *
  * @package    Updater\Inc\Config
  * @author     Mehdi Soltani <soltani.n.mehdi@gmail.com>
+ * @property string $test
+ * @since      1.0.1
+ * @property string $avada_new_version
+ * @property int    $update_site_count
+ * @property string $avada_last_version
  */
 class Avada_Setting extends Primary_Setting {
 
@@ -49,16 +54,21 @@ class Avada_Setting extends Primary_Setting {
 		$this->avada_new_version  = $avada_new_version;
 	}
 
-	public function update_site_count(  ) {
-		return $this->update_site_count;
+	/**
+	 * @param $property
+	 *
+	 * @return mixed
+	 */
+	public function __get( $property ) {
+		return $this->$property;
 	}
 
-	public function avada_last_version() {
-		return $this->avada_last_version;
-	}
-
-	public function avada_new_version() {
-		return $this->avada_new_version;
+	/**
+	 * @param $name
+	 * @param $value
+	 */
+	public function __set( $name, $value ) {
+		$this->$name = $value;
 	}
 
 

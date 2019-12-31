@@ -23,6 +23,11 @@ use Updater\Inc\Config\Host_config;
  *
  * @package    Updater\Inc\Core
  * @author     Mehdi Soltani <soltani.n.mehdi@gmail.com>
+ *
+ * @property string  $updraft_bak_path
+ * @property boolean $is_check_updraft
+ * @property array   $updraft_unwanted_files
+ * @property string  $updraft_path
  */
 class Updraft {
 
@@ -65,20 +70,21 @@ class Updraft {
 
 	}
 
-	public function updraft_bak_path() {
-		return $this->updraft_bak_path;
+	/**
+	 * @param $property
+	 *
+	 * @return mixed
+	 */
+	public function __get( $property ) {
+		return $this->$property;
 	}
 
-	public function updraft_path() {
-		return $this->updraft_path;
-	}
-
-	public function is_check_updraft() {
-		return $this->is_check_updraft;
-	}
-
-	public function updraft_unwanted_files() {
-		return $this->updraft_unwanted_files;
+	/**
+	 * @param $name
+	 * @param $value
+	 */
+	public function __set( $name, $value ) {
+		$this->$name = $value;
 	}
 
 

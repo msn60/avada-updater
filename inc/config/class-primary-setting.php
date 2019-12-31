@@ -21,6 +21,11 @@ namespace Updater\Inc\Config;
  *
  * @package    Updater\Inc\Config
  * @author     Mehdi Soltani <soltani.n.mehdi@gmail.com>
+ * @property string  $script_path
+ * @property boolean $has_backup_zip
+ * @property string  $script_directory
+ * @property string  $domain_name
+ * @property string  $main_path Define paths and files for updater script
  */
 class Primary_Setting {
 
@@ -66,24 +71,21 @@ class Primary_Setting {
 		$this->main_path        = $main_path;
 	}
 
-	public function script_path() {
-		return $this->script_path;
+	/**
+	 * @param $property
+	 *
+	 * @return mixed
+	 */
+	public function __get( $property ) {
+		return $this->$property;
 	}
 
-	public function has_backup_zip(  ) {
-		return $this->has_backup_zip;
-	}
-
-	public function script_directory() {
-		return $this->script_directory;
-	}
-
-	public function domain_name() {
-		return $this->domain_name;
-	}
-
-	public function main_path() {
-		return $this->main_path;
+	/**
+	 * @param $name
+	 * @param $value
+	 */
+	public function __set( $name, $value ) {
+		$this->$name = $value;
 	}
 }
 

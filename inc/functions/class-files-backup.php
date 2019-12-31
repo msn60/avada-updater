@@ -21,6 +21,9 @@ namespace Updater\Inc\Functions;
  *
  * @package    Updater\Inc\Functions
  * @author     Mehdi Soltani <soltani.n.mehdi@gmail.com>
+ * @property  string $whole_site_backup_path
+ * @property  string $backup_zip_file_name
+ * @property  string $backup_zip_file_path
  */
 class Files_Backup {
 
@@ -39,15 +42,21 @@ class Files_Backup {
 
 	}
 
-	public function whole_site_backup_path() {
-		return $this->whole_site_backup_path;
+
+	/**
+	 * @param $property
+	 *
+	 * @return mixed
+	 */
+	public function __get( $property ) {
+		return $this->$property;
 	}
 
-	public function backup_zip_file_name() {
-		return $this->backup_zip_file_name;
-	}
-
-	public function backup_zip_file_path() {
-		return $this->backup_zip_file_path;
+	/**
+	 * @param $name
+	 * @param $value
+	 */
+	public function __set( $name , $value ) {
+		$this->$name = $value;
 	}
 }
