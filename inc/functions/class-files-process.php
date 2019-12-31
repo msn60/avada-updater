@@ -66,8 +66,21 @@ class Files_Process {
 	 * Write on log file
 	 * */
 
-	public function append_section_separator( $file_name ) {
-		$this->append( PHP_EOL . '****************************' . PHP_EOL, $file_name );
+	public function several_appends( $items, $log_file, $is_need_separator = true, $starting_message = null, $ending_message = null ) {
+		if ( $starting_message !== null ) {
+			echo "<h2>{$starting_message}</h2>";
+		}
+		foreach ( $items as $item ) {
+			$this->append( $item['message'], $log_file );
+		}
+		if ( $ending_message !== null ) {
+			echo "<h2>{$ending_message}</h2>";
+		}
+		if ( $is_need_separator ) {
+			$this->append_section_separator( $log_file );
+		}
+
+
 	}
 
 	public function append( $string, $file_name, $show_on_screen = true ) {
@@ -90,23 +103,15 @@ class Files_Process {
 	/*
 	 * write several results on log file continuously
 	 * */
-	public function several_appends( $items, $log_file, $starting_message = null, $ending_message = null ) {
-		if ( $starting_message !== null ) {
-			echo "<h2>{$starting_message}</h2>";
-		}
-		foreach ( $items as $item ) {
-			$this->append( $item['message'], $log_file );
-		}
-		if ( $ending_message !== null ) {
-			echo "<h2>{$ending_message}</h2>";
-		}
-		$this->append_section_separator( $log_file );
 
+	public function append_section_separator( $file_name ) {
+		$this->append( PHP_EOL . '****************************' . PHP_EOL, $file_name );
 	}
 
 	/*
 	 * check directory exists and if not, it will create
 	 * */
+
 	public function make_directory_if_not_exist( $path, $type ) {
 		if ( ! file_exists( $path ) ) {
 			$result = mkdir( $path, 0755 );
@@ -242,6 +247,16 @@ class Files_Process {
 	/*
 	 * Function to Copy all folders and files in a directory
 	 * */
+
+	public function directories_bulk_copy( $list_items ) {
+		$results = [];
+		foreach ( $list_items as $list_item ) {
+			$results[] = $this->copy_directory( $list_item['source'], $list_item['destination'] );
+		}
+
+		return $results;
+	}
+
 	public function copy_directory( $source, $destination ) {
 		if ( is_dir( $source ) ) {
 			@mkdir( $destination );
@@ -264,6 +279,52 @@ class Files_Process {
 		return [
 			'type'    => true,
 			'message' => "The copy of directory from << {$source} >> to << {$destination} >> was successful on: " . date( 'Y-m-d  H:i:s' ) . '.',
+		];
+	}
+
+	/*
+	 * Bulk copy function for copying many files in one process
+	 * */
+	public function directories_bulk_remove( $list_items ) {
+		$results = [];
+		foreach ( $list_items as $list_item ) {
+			$results[] = $this->remove_directory( $list_item );
+		}
+
+		return $results;
+	}
+
+	public function remove_directory( $dir ) {
+		$successful_message   = "Removing of << {$dir} >>  was successful on: " . date( 'Y-m-d  H:i:s' ) . '.';
+		$unsuccessful_message = "We can not remove << {$dir} >>   on: " . date( 'Y-m-d  H:i:s' ) . '!!!';
+		if ( is_dir( $dir ) ) {
+			$files = scandir( $dir );
+			foreach ( $files as $file ) {
+				if ( $file != "." && $file != ".." ) {
+					$this->remove_directory( "$dir/$file" );
+				}
+			}
+			$result = rmdir( $dir );
+			if ( ! $result ) {
+				return [
+					'type'    => false,
+					'message' => $unsuccessful_message,
+				];
+
+			}
+		} else if ( file_exists( $dir ) ) {
+			$result = unlink( $dir );
+			if ( ! $result ) {
+				return [
+					'type'    => false,
+					'message' => $unsuccessful_message,
+				];
+			}
+		}
+
+		return [
+			'type'    => true,
+			'message' => $successful_message,
 		];
 	}
 

@@ -48,79 +48,93 @@ class  Avada_Updater {
 	public $important_directories;
 
 	public function __construct( $primary_values ) {
-		$this->set_primary_config( $primary_values );
-		/*
-		 * =================
-		 * set ini settings
-		 * =================
-		 * */
-		$this->change_ini_settings();
-		/*
-		 * ==================================================
-		 * Check type of webserver and put related code on it
-		 * ==================================================
-		 * */
-		$this->htaccess_litespeed_check();
-		/*
-		 * ============================================================
-		 * Checking critical directory and file before executing script
-		 * =============================================================
-		 * */
-		if ( $this->primary_setting_obj->update_site_count == 1 ) {
-			foreach ( $this->critical_files as $critical_file ) {
-				$this->check_critical_files_exists( $critical_file['path'], $critical_file['type'] );
+		$msn_in_test = true;
+		if ( $msn_in_test ) {
+			$this->set_primary_config( $primary_values );
+			$this->set_new_path_for_Avada_files();
+
+		} else {
+			$this->set_primary_config( $primary_values );
+			/*
+			 * =================
+			 * set ini settings
+			 * =================
+			 * */
+			$this->change_ini_settings();
+			/*
+			 * ==================================================
+			 * Check type of webserver and put related code on it
+			 * ==================================================
+			 * */
+			$this->htaccess_litespeed_check();
+			/*
+			 * ============================================================
+			 * Checking critical directory and file before executing script
+			 * =============================================================
+			 * */
+			if ( $this->primary_setting_obj->update_site_count == 1 ) {
+				foreach ( $this->critical_files as $critical_file ) {
+					$this->check_critical_files_exists( $critical_file['path'], $critical_file['type'] );
+				}
+			}
+			/*
+			 * =================================================================
+			 * Checking directory or files that we need to continue this script.
+			 * If they don't exist, we will create theme.
+			 * =================================================================
+			 * */
+			$this->check_important_directory_exist( $this->important_directories );
+			/*
+			 * =====================================================
+			 * moving old avada files and change them with new files
+			 * =====================================================
+			 * */
+			$this->transfer_avada_new_files();
+			/*
+			 * ===============================
+			 * Assign new path for Avada files
+			 * ===============================
+			 * */
+			$this->set_new_path_for_Avada_files();
+			/*
+			 * ==================================
+			 * move updraft files (if it's exist)
+			 * ==================================
+			 * */
+			if ( $this->updraft_obj->is_check_updraft ) {
+				$this->move_updraft_extra_files();
+			}
+			/*
+			 * ===========================================
+			 * Zip whole site and move to backup directory
+			 * ===========================================
+			 * */
+			$this->backup_whole_site( $this->path_obj->main_log_file );
+			/*
+			 * ===========================
+			 * First: backup language file
+			 * ===========================
+			 * */
+			$this->backup_language_files();
+
+			/*
+			 * ===================================================================
+			 * Second: Move current Avada theme, fusion builder and fusion core to
+			 * last version avada directory (for backup them)
+			 * ===================================================================
+			 * */
+			$this->archive_avada_last_version_files();
+
+
+			/*
+			 * =====================================================
+			 * Return updraft files to its directory in WordPress site
+			 * =====================================================
+			 * */
+			if ( $this->updraft_obj->is_check_updraft ) {
+				$this->move_updraft_extra_files( 'move-to-wp-directory' );
 			}
 		}
-		/*
-		 * =================================================================
-		 * Checking directory or files that we need to continue this script.
-		 * If they don't exist, we will create theme.
-		 * =================================================================
-		 * */
-		$this->check_important_directory_exist( $this->important_directories );
-		/*
-		 * =====================================================
-		 * moving old avada files and change them with new files
-		 * =====================================================
-		 * */
-		$this->transfer_avada_new_files();
-		/*
-		 * ===============================
-		 * Assign new path for Avada files
-		 * ===============================
-		 * */
-		$this->set_new_path_for_Avada_files();
-		/*
-		 * ==================================
-		 * move updraft files (if it's exist)
-		 * ==================================
-		 * */
-		if ( $this->updraft_obj->is_check_updraft ) {
-			$this->move_updraft_extra_files();
-		}
-		/*
-		 * ===========================================
-		 * Zip whole site and move to backup directory
-		 * ===========================================
-		 * */
-		$this->backup_whole_site( $this->path_obj->main_log_file );
-		/*
-		 * ===========================
-		 * First: backup language file
-		 * ===========================
-		 * */
-		$this->backup_language_files();
-
-
-		/*
-		 * =====================================================
-		 * Return updraft files to its directory in WordPress site
-		 * =====================================================
-		 * */
-		if ( $this->updraft_obj->is_check_updraft ) {
-			$this->move_updraft_extra_files( 'move-to-wp-directory' );
-		}
-
 
 	}
 
@@ -319,9 +333,9 @@ class  Avada_Updater {
 	}
 
 	public function set_new_path_for_Avada_files() {
-		$this->avada_obj->avada_new_theme_file = $this->avada_obj->avada_new_version_path . 'avada-new.zip';
-		$this->avada_obj->avada_new_fusion_builder_file = $this->avada_obj->avada_new_version_path . 'fusion-builder-new.zip' ;
-		$this->avada_obj->avada_new_fusion_core_file = $this->avada_obj->avada_new_version_path . 'fusion-core-new.zip';
+		$this->avada_obj->avada_new_theme_file          = $this->avada_obj->avada_new_version_path . 'avada-new.zip';
+		$this->avada_obj->avada_new_fusion_builder_file = $this->avada_obj->avada_new_version_path . 'fusion-builder-new.zip';
+		$this->avada_obj->avada_new_fusion_core_file    = $this->avada_obj->avada_new_version_path . 'fusion-core-new.zip';
 	}
 
 	public function move_updraft_extra_files( $type = 'move-to-temp' ) {
@@ -347,8 +361,38 @@ class  Avada_Updater {
 
 	}
 
+	public function backup_whole_site( $log_file ) {
+		if ( $this->primary_setting_obj->has_backup_zip ) {
+			$zipping_message = 'No need to zip Data! The Date for checking is : ' . date( 'Y-m-d  H:i:s' );
+			$this->files_process_obj->append( $zipping_message, $log_file );
+			if ( file_exists( $this->backup_obj->backup_zip_file_path ) ) {
+				$backup_moving_result = $this->files_process_obj->move_file(
+					$this->backup_obj->backup_zip_file_path,
+					$this->backup_obj->whole_site_backup_path . $this->backup_obj->backup_zip_file_name,
+					$type = 'zipped-site-backup'
+				);
+				$this->files_process_obj->append( $backup_moving_result['message'], $log_file );
+
+			} else {
+				$file_existing_message = 'There is no Zip file to move!!! The Date for checking is :' . date( 'Y-m-d  H:i:s' );
+				$this->files_process_obj->append( $file_existing_message, $log_file );
+			}
+		} else {
+
+			//$result_of_zipping = msn_zip_data( $main_wordpress_path, $whole_site_backup_path . 'backup.zip', 'windows' );
+			$result_of_zipping = $this->files_process_obj->zip_data( $this->path_obj->wordpress_path,
+				$this->backup_obj->whole_site_backup_path . $this->backup_obj->backup_zip_file_name );
+			if ( $result_of_zipping['result'] === false ) {
+				$this->files_process_obj->append( $result_of_zipping['message'], $log_file );
+			} else {
+				$this->files_process_obj->append( $result_of_zipping['message'], $log_file );
+			}
+		}
+		$this->files_process_obj->append_section_separator( $log_file );
+	}
+
 	/**
-	 *
+	 * backup from mo & po language files from fusion core and fusion builder
 	 */
 	public function backup_language_files() {
 		/*
@@ -375,39 +419,37 @@ class  Avada_Updater {
 		];
 
 		$results = $this->files_process_obj->files_bulk_copy( $lang_list_items );
-		$this->files_process_obj->several_appends( $results, $this->path_obj->main_log_file, 'Start to backup lang files',
+		$this->files_process_obj->several_appends( $results, $this->path_obj->main_log_file, true, 'Start to backup lang files',
 			'End of backup lang files' );
 
 	}
 
-	public function backup_whole_site( $log_file ) {
-		if ( $this->primary_setting_obj->has_backup_zip ) {
-			$zipping_message = 'No need to zip Data! The Date for checking is : ' . date( 'Y-m-d  H:i:s' );
-			$this->files_process_obj->append( $zipping_message, $log_file );
-			if ( file_exists( $this->backup_obj->backup_zip_file_path ) ) {
-				$backup_moving_result = $this->files_process_obj->move_file(
-					$this->backup_obj->backup_zip_file_path,
-					$this->backup_obj->whole_site_backup_path . $this->backup_obj->backup_zip_file_name,
-					$type = 'zipped-site-backup'
-				);
-				$this->files_process_obj->append( $backup_moving_result['message'], $log_file );
+	public function archive_avada_last_version_files() {
+		$copy_list_items = [
+			[
+				'source'      => $this->avada_obj->current_avada_theme_path,
+				'destination' => $this->avada_obj->last_version_avada_theme_path,
+			],
+			[
+				'source'      => $this->avada_obj->current_avada_fusion_builder_path,
+				'destination' => $this->avada_obj->last_version_avada_fusion_builder_path,
+			],
+			[
+				'source'      => $this->avada_obj->current_avada_fusion_core_path,
+				'destination' => $this->avada_obj->last_version_avada_fusion_core_path,
+			],
+		];
+		$archive_results = $this->files_process_obj->directories_bulk_copy( $copy_list_items );
+		$this->files_process_obj->several_appends( $archive_results, $this->path_obj->main_log_file, false,
+			'Start to Archiving last version of Avada files' );
 
-			} else {
-				$file_existing_message = 'There is no Zip file to move!!! The Date for checking is :' . date( 'Y-m-d  H:i:s' );
-				$this->files_process_obj->append( $file_existing_message, $log_file );
-			}
-		} else {
-
-			//$result_of_zipping = msn_zip_data( $main_wordpress_path, $whole_site_backup_path . 'backup.zip', 'windows' );
-			$result_of_zipping = $this->files_process_obj->zip_data( $this->path_obj->wordpress_path,
-				$this->backup_obj->whole_site_backup_path. $this->backup_obj->backup_zip_file_name );
-			if ( $result_of_zipping['result'] === false ) {
-				$this->files_process_obj->append( $result_of_zipping['message'], $log_file );
-			} else {
-				$this->files_process_obj->append( $result_of_zipping['message'], $log_file );
-			}
+		$removing_list_items = [];
+		foreach ( $copy_list_items as $copy_list_item ) {
+			$removing_list_items[] = $copy_list_item['source'];
 		}
-		$this->files_process_obj->append_section_separator( $log_file );
+		$removing_results = $this->files_process_obj->directories_bulk_remove( $removing_list_items );
+		$this->files_process_obj->several_appends( $removing_results, $this->path_obj->main_log_file, true, null,
+			'End of Archiving last version of Avada files' );
 	}
 }
 

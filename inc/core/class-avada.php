@@ -34,6 +34,9 @@ namespace Updater\Inc\Core;
  * @property string $current_avada_fusion_builder_path
  * @property string $current_avada_fusion_core_path
  * @property string $last_version_avada_path
+ * @property string $last_version_avada_theme_path
+ * @property string $last_version_avada_fusion_builder_path
+ * @property string $last_version_avada_fusion_core_path
  * @property string $current_avada_fusion_builder_mo_file
  * @property string $current_avada_fusion_builder_po_file
  * @property string $current_avada_fusion_core_mo_file
@@ -62,6 +65,9 @@ class Avada {
 	private $current_avada_fusion_builder_path;
 	private $current_avada_fusion_core_path;
 	private $last_version_avada_path;
+	private $last_version_avada_theme_path;
+	private $last_version_avada_fusion_builder_path;
+	private $last_version_avada_fusion_core_path;
 	private $current_avada_fusion_builder_mo_file;
 	private $current_avada_fusion_builder_po_file;
 	private $current_avada_fusion_core_mo_file;
@@ -81,27 +87,30 @@ class Avada {
 	 * @since  1.0.1
 	 */
 	public function __construct( $main_path, $host_path, $avada_last_version, $avada_new_version, $host_name ) {
-		$this->avada_last_version                   = $avada_last_version;
-		$this->avada_new_version                    = $avada_new_version;
-		$this->avada_new_files_temp_path            = $main_path . '01-temp-new-version-files/';
-		$this->avada_new_theme_file                 = $this->avada_new_files_temp_path . 'avada-new.zip';
-		$this->avada_new_fusion_builder_file        = $this->avada_new_files_temp_path . 'fusion-builder-new.zip';
-		$this->avada_new_fusion_core_file           = $this->avada_new_files_temp_path . 'fusion-core-new.zip';
-		$this->avada_older_version_path             = $main_path . '02-avada-older-versions/';
-		$this->avada_new_version_path               = $main_path . '03-avada-new-version-files/';
-		$this->avada_lang_path                      = $main_path . '04-avada-lang-bak/';
-		$this->current_avada_theme_path             = '../' . $host_path . 'wp-content/themes/Avada/';
-		$this->current_avada_fusion_builder_path    = '../' . $host_path . 'wp-content/plugins/fusion-builder/';
-		$this->current_avada_fusion_core_path       = '../' . $host_path . 'wp-content/plugins/fusion-core/';
-		$this->last_version_avada_path              = $this->avada_older_version_path . $this->avada_last_version . '-' . $host_name . '/';
-		$this->current_avada_fusion_builder_mo_file = $this->current_avada_fusion_builder_path . 'languages/fusion-builder-fa_IR.mo';
-		$this->current_avada_fusion_builder_po_file = $this->current_avada_fusion_builder_path . 'languages/fusion-builder-fa_IR.po';
-		$this->current_avada_fusion_core_mo_file    = $this->current_avada_fusion_core_path . 'languages/fusion-core-fa_IR.mo';
-		$this->current_avada_fusion_core_po_file    = $this->current_avada_fusion_core_path . 'languages/fusion-core-fa_IR.po';
-		$this->backup_avada_fusion_builder_mo_file  = $this->avada_lang_path . 'fusion-builder-fa_IR.mo';
-		$this->backup_avada_fusion_builder_po_file  = $this->avada_lang_path . 'fusion-builder-fa_IR.po';
-		$this->backup_avada_fusion_core_mo_file     = $this->avada_lang_path . 'fusion-core-fa_IR.mo';
-		$this->backup_avada_fusion_core_po_file     = $this->avada_lang_path . 'fusion-core-fa_IR.po';
+		$this->avada_last_version                     = $avada_last_version;
+		$this->avada_new_version                      = $avada_new_version;
+		$this->avada_new_files_temp_path              = $main_path . '01-temp-new-version-files/';
+		$this->avada_new_theme_file                   = $this->avada_new_files_temp_path . 'avada-new.zip';
+		$this->avada_new_fusion_builder_file          = $this->avada_new_files_temp_path . 'fusion-builder-new.zip';
+		$this->avada_new_fusion_core_file             = $this->avada_new_files_temp_path . 'fusion-core-new.zip';
+		$this->avada_older_version_path               = $main_path . '02-avada-older-versions/';
+		$this->avada_new_version_path                 = $main_path . '03-avada-new-version-files/';
+		$this->avada_lang_path                        = $main_path . '04-avada-lang-bak/';
+		$this->current_avada_theme_path               = '../' . $host_path . 'wp-content/themes/Avada/';
+		$this->current_avada_fusion_builder_path      = '../' . $host_path . 'wp-content/plugins/fusion-builder/';
+		$this->current_avada_fusion_core_path         = '../' . $host_path . 'wp-content/plugins/fusion-core/';
+		$this->last_version_avada_path                = $this->avada_older_version_path . $this->avada_last_version . '-' . $host_name . '/';
+		$this->last_version_avada_theme_path          = $this->last_version_avada_path . 'Avada/';
+		$this->last_version_avada_fusion_builder_path = $this->last_version_avada_path . 'fusion-builder/';
+		$this->last_version_avada_fusion_core_path    = $this->last_version_avada_path . 'fusion-core/';
+		$this->current_avada_fusion_builder_mo_file   = $this->current_avada_fusion_builder_path . 'languages/fusion-builder-fa_IR.mo';
+		$this->current_avada_fusion_builder_po_file   = $this->current_avada_fusion_builder_path . 'languages/fusion-builder-fa_IR.po';
+		$this->current_avada_fusion_core_mo_file      = $this->current_avada_fusion_core_path . 'languages/fusion-core-fa_IR.mo';
+		$this->current_avada_fusion_core_po_file      = $this->current_avada_fusion_core_path . 'languages/fusion-core-fa_IR.po';
+		$this->backup_avada_fusion_builder_mo_file    = $this->avada_lang_path . 'fusion-builder-fa_IR.mo';
+		$this->backup_avada_fusion_builder_po_file    = $this->avada_lang_path . 'fusion-builder-fa_IR.po';
+		$this->backup_avada_fusion_core_mo_file       = $this->avada_lang_path . 'fusion-core-fa_IR.mo';
+		$this->backup_avada_fusion_core_po_file       = $this->avada_lang_path . 'fusion-core-fa_IR.po';
 
 	}
 
