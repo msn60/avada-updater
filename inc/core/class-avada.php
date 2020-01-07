@@ -45,6 +45,9 @@ namespace Updater\Inc\Core;
  * @property string $backup_avada_fusion_builder_po_file
  * @property string $backup_avada_fusion_core_mo_file
  * @property string $backup_avada_fusion_core_po_file
+ * @property string $avada_child_theme_lang_path
+ * @property string $avada_child_theme_lang_pot_file_path
+ * @property string $avada_new_lang_pot_file_path
  *
  * @see        https://manual.phpdoc.org/HTMLSmartyConverter/PHP/phpDocumentor/tutorial_tags.property.pkg.html
  * @see        https://intellij-support.jetbrains.com/hc/en-us/community/posts/206372839-Detecting-variables-using-set-and-get
@@ -76,6 +79,9 @@ class Avada {
 	private $backup_avada_fusion_builder_po_file;
 	private $backup_avada_fusion_core_mo_file;
 	private $backup_avada_fusion_core_po_file;
+	private $avada_child_theme_lang_path;
+	private $avada_child_theme_lang_pot_file_path;
+	private $avada_new_lang_pot_file_path;
 
 
 	/**
@@ -86,7 +92,7 @@ class Avada {
 	 * @access public
 	 * @since  1.0.1
 	 */
-	public function __construct( $main_path, $host_path, $avada_last_version, $avada_new_version, $host_name ) {
+	public function __construct( $main_path, $host_path, $avada_last_version, $avada_new_version, $host_name, $main_theme_path ) {
 		$this->avada_last_version                     = $avada_last_version;
 		$this->avada_new_version                      = $avada_new_version;
 		$this->avada_new_files_temp_path              = $main_path . '01-temp-new-version-files/';
@@ -111,6 +117,9 @@ class Avada {
 		$this->backup_avada_fusion_builder_po_file    = $this->avada_lang_path . 'fusion-builder-fa_IR.po';
 		$this->backup_avada_fusion_core_mo_file       = $this->avada_lang_path . 'fusion-core-fa_IR.mo';
 		$this->backup_avada_fusion_core_po_file       = $this->avada_lang_path . 'fusion-core-fa_IR.po';
+		$this->avada_child_theme_lang_path            = $main_theme_path . 'Avada-Child-Theme/languages/';
+		$this->avada_child_theme_lang_pot_file_path   = $this->avada_child_theme_lang_path . 'Avada.pot';
+		$this->avada_new_lang_pot_file_path           = $this->current_avada_theme_path . 'languages/Avada.pot';
 
 	}
 

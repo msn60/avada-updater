@@ -348,6 +348,36 @@ class Files_Process {
 		];
 	}
 
+
+	/**
+	 * @param $source
+	 *
+	 * @return array
+	 */
+	public function remove_file( $source ) {
+		if ( file_exists( $source ) ) {
+			$success_message = "Removing << {$source} >> file was successful on: " . date( 'Y-m-d  H:i:s' ) . '.';
+			$failed_message  = "We can not remove << {$source} >> file on: " . date( 'Y-m-d  H:i:s' ) . '!!!';
+			$result          = unlink( $source );
+			if ( $result ) {
+				return [
+					'type'    => true,
+					'message' => $success_message,
+				];
+			} else {
+				return [
+					'type'    => false,
+					'message' => $failed_message,
+				];
+			}
+		} else {
+			return [
+				'type'    => false,
+				'message' => "Unfortunately << {$source} >> file is not exist. So we can not remove it on: " . date( 'Y-m-d  H:i:s' ) . '!!!',
+			];
+		}
+	}
+
 	/*
 	 * Bulk copy function for copying many files in one process
 	 * */

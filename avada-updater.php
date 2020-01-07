@@ -141,6 +141,13 @@ class  Avada_Updater {
 			 * */
 			$this->move_lang_files();
 
+			/*
+			 * =======================================
+			 * Copy new avada.pot to Avada child theme
+			 * =======================================
+			 * */
+			$this->copy_new_avada_pot();
+
 
 			/*
 			 * =====================================================
@@ -170,7 +177,8 @@ class  Avada_Updater {
 			$this->path_obj->host_path,
 			$this->primary_setting_obj->avada_last_version,
 			$this->primary_setting_obj->avada_new_version,
-			$this->path_obj->host_name
+			$this->path_obj->host_name,
+			$this->path_obj->main_theme_path
 		);
 		$this->backup_obj                 = new Files_Backup(
 			$this->path_obj->main_path,
@@ -531,6 +539,18 @@ class  Avada_Updater {
 			'End of backup lang files' );
 
 	}
+
+	/**
+	 * copy new avada.pot file in child theme
+	 */
+	public function copy_new_avada_pot() {
+		$remove_pot_file_result = $this->files_process_obj->remove_file( $this->avada_obj->avada_child_theme_lang_pot_file_path );
+		$this->files_process_obj->append( $remove_pot_file_result ['message'], $this->path_obj->main_log_file );
+		$copy_original_pot_file_result = $this->files_process_obj->copy_file( $this->avada_obj->avada_new_lang_pot_file_path,
+			$this->avada_obj->avada_child_theme_lang_pot_file_path );
+		$this->files_process_obj->append( $copy_original_pot_file_result ['message'], $this->path_obj->main_log_file );
+		$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file );
+	}
 }
 
 
@@ -545,17 +565,19 @@ RewriteRule .* - [E=noconntimeout:1]
 HTACCESS;
 
 $updater_obj = new Avada_Updater( $primary_values );
-var_dump( $updater_obj->primary_setting_obj );
+/*var_dump( $updater_obj->primary_setting_obj );
 var_dump( $updater_obj->path_obj );
 var_dump( $updater_obj->avada_obj );
 var_dump( $updater_obj->backup_obj );
 var_dump( $updater_obj->updraft_obj );
 var_dump( $updater_obj->critical_files );
-var_dump( $updater_obj->important_directories );
+var_dump( $updater_obj->important_directories );*/
 
 /*
-
-*/
+ * ==================
+ * End of script
+ * ==================
+ * */
 
 
 
