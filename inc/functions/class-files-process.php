@@ -492,5 +492,30 @@ class Files_Process {
 		}
 	}
 
+	/*
+	 * function to unzip data with its related permissions in linux os
+	 * */
+	function unzip_data( $file, $destination_path ) {
+		$zip = new \ZipArchive;
+		$res = $zip->open( $file );
+		if ( $res === true ) {
+			// extract it to the path we determined above
+			$zip->extractTo( $destination_path );
+			$zip->close();
+
+			return [
+				'result'  => true,
+				'message' => "Unzipping from << {$file} >> to << {$destination_path} >> was successful on: " . date( 'Y-m-d  H:i:s' ) . '.',
+			];
+
+		} else {
+			return [
+				'result'  => false,
+				'message' => "Unfortunately, we can not unzip from << {$file} >> to << {$destination_path} >> on: " . date( 'Y-m-d  H:i:s' ) . '!!!',
+			];
+		}
+
+	}
+
 
 }

@@ -50,8 +50,10 @@ class  Avada_Updater {
 	public function __construct( $primary_values ) {
 		$msn_in_test = true;
 		if ( $msn_in_test ) {
+
 			$this->set_primary_config( $primary_values );
-			$this->set_new_path_for_Avada_files();
+			$this->set_new_path_for_avada_files();
+
 
 		} else {
 			$this->set_primary_config( $primary_values );
@@ -95,7 +97,7 @@ class  Avada_Updater {
 			 * Assign new path for Avada files
 			 * ===============================
 			 * */
-			$this->set_new_path_for_Avada_files();
+			$this->set_new_path_for_avada_files();
 			/*
 			 * ==================================
 			 * move updraft files (if it's exist)
@@ -124,6 +126,13 @@ class  Avada_Updater {
 			 * ===================================================================
 			 * */
 			$this->archive_avada_last_version_files();
+
+			/*
+			 * ===================================================
+			 * Unzipped Avada theme & fusion core & fusion builder
+			 * ===================================================
+			 * */
+			$this->unzip_avada_last_version_files();
 
 
 			/*
@@ -235,6 +244,12 @@ class  Avada_Updater {
 			];
 	}
 
+	public function set_new_path_for_avada_files() {
+		$this->avada_obj->avada_new_theme_file          = $this->avada_obj->avada_new_version_path . 'avada-new.zip';
+		$this->avada_obj->avada_new_fusion_builder_file = $this->avada_obj->avada_new_version_path . 'fusion-builder-new.zip';
+		$this->avada_obj->avada_new_fusion_core_file    = $this->avada_obj->avada_new_version_path . 'fusion-core-new.zip';
+	}
+
 	public function htaccess_litespeed_check() {
 
 		if ( $this->check_server_type() == 'litespeed' ) {
@@ -249,10 +264,13 @@ class  Avada_Updater {
 
 	}
 
-	/*
+	/**
 	 * Check critical directory or files
-	 * */
-
+	 *
+	 * @param      $path
+	 * @param      $type
+	 * @param null $logfile
+	 */
 	public function check_critical_files_exists( $path, $type, $logfile = null ) {
 		$error_message = 'Error message created on: ' . date( 'Y-m-d  H:i:s' ) . '.' . PHP_EOL;
 		if ( ! file_exists( $path ) ) {
@@ -330,12 +348,6 @@ class  Avada_Updater {
 		if ( $need_separator ) {
 			$this->files_process_obj->append_section_separator( $log_file );
 		}
-	}
-
-	public function set_new_path_for_Avada_files() {
-		$this->avada_obj->avada_new_theme_file          = $this->avada_obj->avada_new_version_path . 'avada-new.zip';
-		$this->avada_obj->avada_new_fusion_builder_file = $this->avada_obj->avada_new_version_path . 'fusion-builder-new.zip';
-		$this->avada_obj->avada_new_fusion_core_file    = $this->avada_obj->avada_new_version_path . 'fusion-core-new.zip';
 	}
 
 	public function move_updraft_extra_files( $type = 'move-to-temp' ) {
@@ -450,6 +462,40 @@ class  Avada_Updater {
 		$removing_results = $this->files_process_obj->directories_bulk_remove( $removing_list_items );
 		$this->files_process_obj->several_appends( $removing_results, $this->path_obj->main_log_file, true, null,
 			'End of Archiving last version of Avada files' );
+	}
+
+	public function unzip_avada_last_version_files() {
+		$msn_new_theme_items = [
+			[
+				'source_file'      => $this->avada_obj->avada_new_theme_file,
+				'destination_path' => $this->path_obj->main_theme_path,
+				'check_directory'  => $this->avada_obj->current_avada_theme_path,
+			],
+			[
+				'source_file'      => $this->avada_obj->avada_new_fusion_builder_file,
+				'destination_path' => $this->path_obj->main_plugin_path,
+				'check_directory'  => $this->avada_obj->current_avada_fusion_builder_path,
+			],
+			[
+				'source_file'      => $this->avada_obj->avada_new_fusion_core_file,
+				'destination_path' => $this->path_obj->main_plugin_path,
+				'check_directory'  => $this->avada_obj->current_avada_fusion_core_path,
+			],
+		];
+
+		foreach ( $msn_new_theme_items as $msn_new_theme_item ) {
+			if ( ! file_exists( $msn_new_theme_item['check_directory'] ) ) {
+				$msn_unzipping_result = $this->files_process_obj->unzip_data( $msn_new_theme_item['source_file'],
+					$msn_new_theme_item['destination_path'] );
+				$this->files_process_obj->append( $msn_unzipping_result['message'], $this->path_obj->main_log_file );
+			} else {
+				$msn_unzipping_unsuccessful_message
+					= "We did not extract << {$msn_new_theme_item['source_file']} >> due to existing << {$msn_new_theme_item['destination_path']} >> directory!!!";
+				$this->files_process_obj->append( $msn_unzipping_unsuccessful_message, $this->path_obj->main_log_file );
+			}
+
+		}
+		$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file );
 	}
 }
 

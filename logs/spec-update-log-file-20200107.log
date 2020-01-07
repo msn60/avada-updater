@@ -1,0 +1,86 @@
+It is not LiteSpeed Server. So nothing write on htaccess file. Date is : 2020-01-07  21:42:14.
+
+****************************
+
+Error message created on: 2020-01-07  21:44:27.
+You must define correct main path!
+
+****************************
+
+Error message created on: 2020-01-07  21:44:52.
+You must put theme zip file in 01-temp-new-version-files directory!
+
+****************************
+
+The directory for keeping new versions of Avada files was created succesfully at: 2020-01-07 21:49:10.
+The directory for keeping language files of Avada was created succesfully at: 2020-01-07 21:49:10.
+The directory for keeping extra updraft files was created succesfully at: 2020-01-07 21:49:10.
+The directory for keeping whole site files for update process was created succesfully at: 2020-01-07 21:49:10.
+The directory for keeping log files of update process was created succesfully at: 2020-01-07 21:49:10.
+End of checking to be existing important directories
+
+****************************
+
+The directory for keep older files of avada was created succesfully at: 2020-01-07 21:51:44.
+There is nothing to archive last Avada files: 2020-01-07  21:51:44
+
+advanced-custom-fields-new.zip is copied in ../temp-source/03-avada-new-version-files/ successfully at: 2020-01-07 21:51:44.
+avada-new.zip is copied in ../temp-source/03-avada-new-version-files/ successfully at: 2020-01-07 21:51:44.
+fusion-builder-new.zip is copied in ../temp-source/03-avada-new-version-files/ successfully at: 2020-01-07 21:51:44.
+fusion-core-new.zip is copied in ../temp-source/03-avada-new-version-files/ successfully at: 2020-01-07 21:51:44.
+
+****************************
+
+The directory keep older files of avada was already existed.
+
+avada-new.zip is copied in ../temp-source/02-avada-older-versions/6.0.6-spec/ successfully at: 2020-01-07 21:52:26.
+fusion-builder-new.zip is copied in ../temp-source/02-avada-older-versions/6.0.6-spec/ successfully at: 2020-01-07 21:52:26.
+fusion-core-new.zip is copied in ../temp-source/02-avada-older-versions/6.0.6-spec/ successfully at: 2020-01-07 21:52:26.
+
+advanced-custom-fields-new.zip is copied in ../temp-source/03-avada-new-version-files/ successfully at: 2020-01-07 21:52:26.
+avada-new.zip is copied in ../temp-source/03-avada-new-version-files/ successfully at: 2020-01-07 21:52:26.
+fusion-builder-new.zip is copied in ../temp-source/03-avada-new-version-files/ successfully at: 2020-01-07 21:52:26.
+fusion-core-new.zip is copied in ../temp-source/03-avada-new-version-files/ successfully at: 2020-01-07 21:52:26.
+
+****************************
+
+
+testak is copied in ../temp-source/07-updraft-bak/ successfully at: 2020-01-07 22:03:40.
+testforme is copied in ../temp-source/07-updraft-bak/ successfully at: 2020-01-07 22:03:40.
+testforupdraft.zip is copied in ../temp-source/07-updraft-bak/ successfully at: 2020-01-07 22:03:40.
+
+****************************
+
+
+testak is copied in ../spec/wp-content/updraft/ successfully at: 2020-01-07 22:04:17.
+testforme is copied in ../spec/wp-content/updraft/ successfully at: 2020-01-07 22:04:17.
+testforupdraft.zip is copied in ../spec/wp-content/updraft/ successfully at: 2020-01-07 22:04:17.
+
+****************************
+
+Zipping whole site files backup was successfully done on: 2020-01-07  22:04:59.
+
+****************************
+
+The copy from << ../spec/wp-content/plugins/fusion-builder/languages/fusion-builder-fa_IR.mo >> to << ../temp-source/04-avada-lang-bak/fusion-builder-fa_IR.mo >> was successful on: 2020-01-07  22:07:46.
+The copy from << ../spec/wp-content/plugins/fusion-builder/languages/fusion-builder-fa_IR.po >> to << ../temp-source/04-avada-lang-bak/fusion-builder-fa_IR.po >> was successful on: 2020-01-07  22:07:46.
+The copy from << ../spec/wp-content/plugins/fusion-core/languages/fusion-core-fa_IR.mo >> to << ../temp-source/04-avada-lang-bak/fusion-core-fa_IR.mo >> was successful on: 2020-01-07  22:07:46.
+The copy from << ../spec/wp-content/plugins/fusion-core/languages/fusion-core-fa_IR.po >> to << ../temp-source/04-avada-lang-bak/fusion-core-fa_IR.po >> was successful on: 2020-01-07  22:07:46.
+
+****************************
+
+The copy of directory from << ../spec/wp-content/themes/Avada/ >> to << ../temp-source/02-avada-older-versions/6.0.6-spec/Avada/ >> was successful on: 2020-01-07  22:09:02.
+The copy of directory from << ../spec/wp-content/plugins/fusion-builder/ >> to << ../temp-source/02-avada-older-versions/6.0.6-spec/fusion-builder/ >> was successful on: 2020-01-07  22:09:07.
+The copy of directory from << ../spec/wp-content/plugins/fusion-core/ >> to << ../temp-source/02-avada-older-versions/6.0.6-spec/fusion-core/ >> was successful on: 2020-01-07  22:09:07.
+Removing of << ../spec/wp-content/themes/Avada/ >>  was successful on: 2020-01-07  22:09:07.
+Removing of << ../spec/wp-content/plugins/fusion-builder/ >>  was successful on: 2020-01-07  22:09:10.
+Removing of << ../spec/wp-content/plugins/fusion-core/ >>  was successful on: 2020-01-07  22:09:14.
+
+****************************
+
+Unzipping from << ../temp-source/03-avada-new-version-files/avada-new.zip >> to << ../spec/wp-content/themes/ >> was successful on: 2020-01-07  22:34:21.
+Unzipping from << ../temp-source/03-avada-new-version-files/fusion-builder-new.zip >> to << ../spec/wp-content/plugins/ >> was successful on: 2020-01-07  22:34:24.
+Unzipping from << ../temp-source/03-avada-new-version-files/fusion-core-new.zip >> to << ../spec/wp-content/plugins/ >> was successful on: 2020-01-07  22:34:24.
+
+****************************
+
