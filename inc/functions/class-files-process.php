@@ -212,9 +212,29 @@ class Files_Process {
 		];
 	}
 
-	/*
-	* Move file to another directory
-	* */
+
+	/**
+	 * @param array $list_items
+	 *
+	 * @return array
+	 */
+	public function files_bulk_move( $list_items ) {
+		$results = [];
+		foreach ( $list_items as $list_item ) {
+			$results[] = $this->move_file( $list_item['source_path'], $list_item['destination_file_name'] );
+		}
+
+		return $results;
+	}
+
+
+	/**
+	 * @param string $old_path
+	 * @param string $new_path
+	 * @param string $type
+	 *
+	 * @return array
+	 */
 	public function move_file( $old_path, $new_path, $type = 'normal' ) {
 		$moving_message = [];
 		if ( $type == 'zipped-site-backup' ) {

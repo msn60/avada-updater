@@ -134,6 +134,13 @@ class  Avada_Updater {
 			 * */
 			$this->unzip_avada_last_version_files();
 
+			/*
+			 * ===============================================
+			 * Move lang file to related original directories
+			 * ===============================================
+			 * */
+			$this->move_lang_files();
+
 
 			/*
 			 * =====================================================
@@ -496,6 +503,33 @@ class  Avada_Updater {
 
 		}
 		$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file );
+	}
+
+	public function move_lang_files() {
+		$lang_list_items = [
+			[
+				'destination_file_name' => $this->avada_obj->current_avada_fusion_builder_mo_file,
+				'source_path'           => $this->avada_obj->backup_avada_fusion_builder_mo_file,
+			],
+			[
+				'destination_file_name' => $this->avada_obj->current_avada_fusion_builder_po_file,
+				'source_path'           => $this->avada_obj->backup_avada_fusion_builder_po_file,
+			],
+			[
+				'destination_file_name' => $this->avada_obj->current_avada_fusion_core_mo_file,
+				'source_path'           => $this->avada_obj->backup_avada_fusion_core_mo_file,
+			],
+			[
+				'destination_file_name' => $this->avada_obj->current_avada_fusion_core_po_file,
+				'source_path'           => $this->avada_obj->backup_avada_fusion_core_po_file,
+			],
+
+		];
+
+		$results = $this->files_process_obj->files_bulk_move( $lang_list_items );
+		$this->files_process_obj->several_appends( $results, $this->path_obj->main_log_file, true, 'Start to backup lang files',
+			'End of backup lang files' );
+
 	}
 }
 
