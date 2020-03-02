@@ -77,13 +77,18 @@ trait Host_config {
 				$is_check_updraft = true;
 				break;
 			case 'webmaster':
-				$host_name        = 'webmaster';
-				$host_path        = 'webmaster/';
+				$host_name        = 'wpweb';
+				$host_path        = 'wpweb/';
 				$is_check_updraft = false;
 				break;
 			case 'spec':
 				$host_name        = 'spec';
 				$host_path        = 'spec/';
+				$is_check_updraft = true;
+				break;
+			case 'ayande':
+				$host_name        = 'ayande';
+				$host_path        = 'ayande/';
 				$is_check_updraft = true;
 				break;
 			default:

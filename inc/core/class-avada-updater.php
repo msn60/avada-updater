@@ -1,9 +1,18 @@
 <?php
+/**
+ * Avada_Updater class
+ *
+ * This file contains main class which can handle whole script process
+ *
+ * @package    Updater
+ * @author     Mehdi Soltani <soltani.n.mehdi@gmail.com>
+ * @license    https://www.gnu.org/licenses/gpl-3.0.txt GNU/GPLv3
+ * @link       https://wpwebmaster.ir
+ * @since      1.0.0
+ */
 
-namespace Updater;
-require_once __DIR__ . '/vendor/autoload.php';
+namespace Updater\Inc\Core;
 
-namespace Updater\Inc;
 
 use Updater\Inc\Core\{
 	Avada, Updraft
@@ -14,7 +23,6 @@ use Updater\Inc\Functions\{
 use Updater\Inc\Config\{
 	Primary_Setting, Avada_Setting
 };
-
 
 class  Avada_Updater {
 	use Utility;
@@ -47,131 +55,22 @@ class  Avada_Updater {
 	public $critical_files;
 	public $important_directories;
 
-	public function __construct( $primary_values ) {
-		$msn_in_test = true;
-		if ( $msn_in_test ) {
-
-			$this->set_primary_config( $primary_values );
-			$this->set_new_path_for_avada_files();
-
-
-		} else {
-			$this->set_primary_config( $primary_values );
-			/*
-			 * =================
-			 * set ini settings
-			 * =================
-			 * */
-			$this->change_ini_settings();
-			/*
-			 * ==================================================
-			 * Check type of webserver and put related code on it
-			 * ==================================================
-			 * */
-			$this->htaccess_litespeed_check();
-			/*
-			 * ============================================================
-			 * Checking critical directory and file before executing script
-			 * =============================================================
-			 * */
-			if ( $this->primary_setting_obj->update_site_count == 1 ) {
-				foreach ( $this->critical_files as $critical_file ) {
-					$this->check_critical_files_exists( $critical_file['path'], $critical_file['type'] );
-				}
-			}
-			/*
-			 * =================================================================
-			 * Checking directory or files that we need to continue this script.
-			 * If they don't exist, we will create theme.
-			 * =================================================================
-			 * */
-			$this->check_important_directory_exist( $this->important_directories );
-			/*
-			 * =====================================================
-			 * moving old avada files and change them with new files
-			 * =====================================================
-			 * */
-			$this->transfer_avada_new_files();
-			/*
-			 * ===============================
-			 * Assign new path for Avada files
-			 * ===============================
-			 * */
-			$this->set_new_path_for_avada_files();
-			/*
-			 * ==================================
-			 * move updraft files (if it's exist)
-			 * ==================================
-			 * */
-			if ( $this->updraft_obj->is_check_updraft ) {
-				$this->move_updraft_extra_files();
-			}
-			/*
-			 * ===========================================
-			 * Zip whole site and move to backup directory
-			 * ===========================================
-			 * */
-			$this->backup_whole_site( $this->path_obj->main_log_file );
-			/*
-			 * ===========================
-			 * First: backup language file
-			 * ===========================
-			 * */
-			$this->backup_language_files();
-
-			/*
-			 * ===================================================================
-			 * Second: Move current Avada theme, fusion builder and fusion core to
-			 * last version avada directory (for backup them)
-			 * ===================================================================
-			 * */
-			$this->archive_avada_last_version_files();
-
-			/*
-			 * ===================================================
-			 * Unzipped Avada theme & fusion core & fusion builder
-			 * ===================================================
-			 * */
-			$this->unzip_avada_last_version_files();
-
-			/*
-			 * ===============================================
-			 * Move lang file to related original directories
-			 * ===============================================
-			 * */
-			$this->move_lang_files();
-
-			/*
-			 * =======================================
-			 * Copy new avada.pot to Avada child theme
-			 * =======================================
-			 * */
-			$this->copy_new_avada_pot();
-
-
-			/*
-			 * =====================================================
-			 * Return updraft files to its directory in WordPress site
-			 * =====================================================
-			 * */
-			if ( $this->updraft_obj->is_check_updraft ) {
-				$this->move_updraft_extra_files( 'move-to-wp-directory' );
-			}
-		}
-
-	}
-
-	public function set_primary_config( $primary_values ) {
-		/*
+	public function __construct(
+		string $primary_script_path,
+		string $htaccess_lite_speed_config,
+		Avada_Setting $primary_setting_obj,
+		Path $path_obj
+	) {
+		/**
 		 * set time zone
-		 * */
+		 */
 		$this->set_time_zone( 'Asia/Tehran' );
 		/*
 		 * sample of dependency injection
 		 * */
-		$this->script_path                = $primary_values['script_path'];
-		$this->primary_setting_obj        = new Avada_Setting( $this->script_path );
-		$this->path_obj                   = new Path( $this->primary_setting_obj );
+		$this->script_path                = $primary_script_path;
+		$this->primary_setting_obj        = $primary_setting_obj;
+		$this->path_obj                   = $path_obj;
 		$this->avada_obj                  = new Avada(
 			$this->path_obj->main_path,
 			$this->path_obj->host_path,
@@ -192,7 +91,7 @@ class  Avada_Updater {
 			$this->primary_setting_obj->domain_name
 		);
 		$this->files_process_obj          = new Files_Process();
-		$this->htaccess_lite_speed_config = $primary_values['htaccess_lite_speed_config'];
+		$this->htaccess_lite_speed_config = $htaccess_lite_speed_config;
 		/*
 		 * critical files
 		 * */
@@ -201,6 +100,7 @@ class  Avada_Updater {
 		 * Important directories inside temp-source
 		 * */
 		$this->important_directories = $this->set_important_directories();
+		//$this->set_primary_config( $primary_values );
 	}
 
 	public function set_critical_files() {
@@ -259,10 +159,112 @@ class  Avada_Updater {
 			];
 	}
 
-	public function set_new_path_for_avada_files() {
-		$this->avada_obj->avada_new_theme_file          = $this->avada_obj->avada_new_version_path . 'avada-new.zip';
-		$this->avada_obj->avada_new_fusion_builder_file = $this->avada_obj->avada_new_version_path . 'fusion-builder-new.zip';
-		$this->avada_obj->avada_new_fusion_core_file    = $this->avada_obj->avada_new_version_path . 'fusion-core-new.zip';
+	/**
+	 * Initialize Avada update process
+	 */
+	public function init() {
+		/*
+		 * =================
+		 * set ini settings
+		 * =================
+		 * */
+		$this->change_ini_settings();
+		/*
+		 * ==================================================
+		 * Check type of webserver and put related code on it
+		 * ==================================================
+		 * */
+		$this->htaccess_litespeed_check();
+		/*
+		 * ============================================================
+		 * Checking critical directory and file before executing script
+		 * =============================================================
+		 * */
+		if ( $this->primary_setting_obj->update_site_count == 1 ) {
+			foreach ( $this->critical_files as $critical_file ) {
+				$this->check_critical_files_exists( $critical_file['path'], $critical_file['type'] );
+			}
+		}
+		/*
+		 * =================================================================
+		 * Checking directory or files that we need to continue this script.
+		 * If they don't exist, we will create theme.
+		 * =================================================================
+		 * */
+		$this->check_important_directory_exist( $this->important_directories );
+		/*
+		 * =====================================================
+		 * moving old avada files and change them with new files
+		 * =====================================================
+		 * */
+		$this->transfer_avada_new_files();
+		/*
+		 * ===============================
+		 * Assign new path for Avada files
+		 * ===============================
+		 * */
+		$this->set_new_path_for_avada_files();
+		/*
+		 * ==================================
+		 * move updraft files (if it's exist)
+		 * ==================================
+		 * */
+		if ( $this->updraft_obj->is_check_updraft ) {
+			$this->move_updraft_extra_files();
+		}
+		/*
+		 * ===========================================
+		 * Zip whole site and move to backup directory
+		 * ===========================================
+		 * */
+		$this->backup_whole_site( $this->path_obj->main_log_file );
+		/*
+		 * ===========================
+		 * First: backup language file
+		 * ===========================
+		 * */
+		$this->backup_language_files();
+
+		/*
+		 * ===================================================================
+		 * Second: Move current Avada theme, fusion builder and fusion core to
+		 * last version avada directory (for backup them)
+		 * ===================================================================
+		 * */
+		$this->archive_avada_last_version_files();
+
+		/*
+		 * ===================================================
+		 * Unzipped Avada theme & fusion core & fusion builder
+		 * ===================================================
+		 * */
+		$this->unzip_avada_last_version_files();
+
+		/*
+		 * ===============================================
+		 * Move lang file to related original directories
+		 * ===============================================
+		 * */
+		$this->move_lang_files();
+
+		/*
+		 * =======================================
+		 * Copy new avada.pot to Avada child theme
+		 * =======================================
+		 * */
+		$this->copy_new_avada_pot();
+
+
+		/*
+		 * =====================================================
+		 * Return updraft files to its directory in WordPress site
+		 * =====================================================
+		 * */
+		if ( $this->updraft_obj->is_check_updraft ) {
+			$this->move_updraft_extra_files( 'move-to-wp-directory' );
+		}
+
+
 	}
 
 	public function htaccess_litespeed_check() {
@@ -363,6 +365,12 @@ class  Avada_Updater {
 		if ( $need_separator ) {
 			$this->files_process_obj->append_section_separator( $log_file );
 		}
+	}
+
+	public function set_new_path_for_avada_files() {
+		$this->avada_obj->avada_new_theme_file          = $this->avada_obj->avada_new_version_path . 'avada-new.zip';
+		$this->avada_obj->avada_new_fusion_builder_file = $this->avada_obj->avada_new_version_path . 'fusion-builder-new.zip';
+		$this->avada_obj->avada_new_fusion_core_file    = $this->avada_obj->avada_new_version_path . 'fusion-core-new.zip';
 	}
 
 	public function move_updraft_extra_files( $type = 'move-to-temp' ) {
@@ -551,33 +559,11 @@ class  Avada_Updater {
 		$this->files_process_obj->append( $copy_original_pot_file_result ['message'], $this->path_obj->main_log_file );
 		$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file );
 	}
+
+	public function set_primary_config( $primary_values ) {
+
+	}
+
+
 }
-
-
-$primary_values['script_path'] = dirname( __FILE__ );
-$primary_values['htaccess_lite_speed_config']
-                               = <<< HTACCESS
-<IfModule Litespeed>
-RewriteEngine On
-RewriteRule .* - [E=noabort:1]
-RewriteRule .* - [E=noconntimeout:1]
-</IfModule>
-HTACCESS;
-
-$updater_obj = new Avada_Updater( $primary_values );
-/*var_dump( $updater_obj->primary_setting_obj );
-var_dump( $updater_obj->path_obj );
-var_dump( $updater_obj->avada_obj );
-var_dump( $updater_obj->backup_obj );
-var_dump( $updater_obj->updraft_obj );
-var_dump( $updater_obj->critical_files );
-var_dump( $updater_obj->important_directories );*/
-
-/*
- * ==================
- * End of script
- * ==================
- * */
-
-
 

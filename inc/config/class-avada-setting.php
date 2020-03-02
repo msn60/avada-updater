@@ -40,12 +40,12 @@ class Avada_Setting extends Primary_Setting {
 
 	public function __construct(
 		$script_path,
-		$update_site_count = 2,
-		$avada_last_version = '6.0.6',
+		$update_site_count = 1,
+		$avada_last_version = '5.9.0',
 		$avada_new_version = '6.1.2',
 		$has_backup_zip = false,
 		$script_directory = 'updater',
-		$domain_name = 'spec',
+		$domain_name = 'ayande',
 		$main_path = '../temp-source/'
 	) {
 		parent::__construct( $script_path, $has_backup_zip, $script_directory, $domain_name, $main_path );
