@@ -13,6 +13,7 @@
 
 namespace Updater\Inc\Core;
 
+use Updater\Inc\Functions\Files_Process;
 
 /**
  * Class Avada
@@ -138,6 +139,80 @@ class Avada {
 	 */
 	public function __set( $name, $value ) {
 		$this->$name = $value;
+	}
+
+	/**
+	 * backup from mo & po language files from fusion core and fusion builder
+	 */
+	public function backup_language_files(
+		Files_Process $files_process_obj,
+		$main_log_file
+	) {
+		/*
+		 * Copy Farsi language files
+		 * */
+		$lang_list_items = [
+			[
+				'source_path'           => $this->current_avada_fusion_builder_mo_file,
+				'destination_file_name' => $this->backup_avada_fusion_builder_mo_file,
+			],
+			[
+				'source_path'           => $this->current_avada_fusion_builder_po_file,
+				'destination_file_name' => $this->backup_avada_fusion_builder_po_file,
+			],
+			[
+				'source_path'           => $this->current_avada_fusion_core_mo_file,
+				'destination_file_name' => $this->backup_avada_fusion_core_mo_file,
+			],
+			[
+				'source_path'           => $this->current_avada_fusion_core_po_file,
+				'destination_file_name' => $this->backup_avada_fusion_core_po_file,
+			],
+
+		];
+
+		$results = $files_process_obj->files_bulk_copy( $lang_list_items );
+		$files_process_obj->several_appends( $results, $main_log_file, true, 'Start to backup lang files',
+			'End of backup lang files' );
+
+	}
+
+	/**
+	 * Archive current version of Avada theme, fusion builder and core
+	 *
+	 * @param Files_Process $files_process_obj
+	 * @param string        $main_log_file
+	 */
+	public function archive_avada_last_version_files(
+		Files_Process $files_process_obj,
+		$main_log_file
+	) {
+		// TODO: Check that copy_list_items exist
+		$copy_list_items = [
+			[
+				'source'      => $this->current_avada_theme_path,
+				'destination' => $this->last_version_avada_theme_path,
+			],
+			[
+				'source'      => $this->current_avada_fusion_builder_path,
+				'destination' => $this->last_version_avada_fusion_builder_path,
+			],
+			[
+				'source'      => $this->current_avada_fusion_core_path,
+				'destination' => $this->last_version_avada_fusion_core_path,
+			],
+		];
+		$archive_results = $files_process_obj->directories_bulk_copy( $copy_list_items );
+		$files_process_obj->several_appends( $archive_results, $main_log_file, false,
+			'Start to Archiving last version of Avada files' );
+
+		$removing_list_items = [];
+		foreach ( $copy_list_items as $copy_list_item ) {
+			$removing_list_items[] = $copy_list_item['source'];
+		}
+		$removing_results = $files_process_obj->directories_bulk_remove( $removing_list_items );
+		$files_process_obj->several_appends( $removing_results, $main_log_file, true, null,
+			'End of Archiving last version of Avada files' );
 	}
 
 

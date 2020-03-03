@@ -220,7 +220,10 @@ class  Avada_Updater {
 		 * First: backup language file
 		 * ===========================
 		 * */
-		$this->backup_language_files();
+		$this->avada_obj->backup_language_files(
+			$this->files_process_obj,
+			$this->path_obj->main_log_file
+		);
 
 		/*
 		 * ===================================================================
@@ -228,7 +231,10 @@ class  Avada_Updater {
 		 * last version avada directory (for backup them)
 		 * ===================================================================
 		 * */
-		$this->archive_avada_last_version_files();
+		$this->avada_obj->archive_avada_last_version_files(
+			$this->files_process_obj,
+			$this->path_obj->main_log_file
+		);
 
 		/*
 		 * ===================================================
@@ -364,67 +370,6 @@ class  Avada_Updater {
 		$this->avada_obj->avada_new_fusion_core_file    = $this->avada_obj->avada_new_version_path . 'fusion-core-new.zip';
 	}
 
-	/**
-	 * backup from mo & po language files from fusion core and fusion builder
-	 */
-	public function backup_language_files() {
-		/*
-		 * Copy Farsi language files
-		 * */
-		$lang_list_items = [
-			[
-				'source_path'           => $this->avada_obj->current_avada_fusion_builder_mo_file,
-				'destination_file_name' => $this->avada_obj->backup_avada_fusion_builder_mo_file,
-			],
-			[
-				'source_path'           => $this->avada_obj->current_avada_fusion_builder_po_file,
-				'destination_file_name' => $this->avada_obj->backup_avada_fusion_builder_po_file,
-			],
-			[
-				'source_path'           => $this->avada_obj->current_avada_fusion_core_mo_file,
-				'destination_file_name' => $this->avada_obj->backup_avada_fusion_core_mo_file,
-			],
-			[
-				'source_path'           => $this->avada_obj->current_avada_fusion_core_po_file,
-				'destination_file_name' => $this->avada_obj->backup_avada_fusion_core_po_file,
-			],
-
-		];
-
-		$results = $this->files_process_obj->files_bulk_copy( $lang_list_items );
-		$this->files_process_obj->several_appends( $results, $this->path_obj->main_log_file, true, 'Start to backup lang files',
-			'End of backup lang files' );
-
-	}
-
-	public function archive_avada_last_version_files() {
-		$copy_list_items = [
-			[
-				'source'      => $this->avada_obj->current_avada_theme_path,
-				'destination' => $this->avada_obj->last_version_avada_theme_path,
-			],
-			[
-				'source'      => $this->avada_obj->current_avada_fusion_builder_path,
-				'destination' => $this->avada_obj->last_version_avada_fusion_builder_path,
-			],
-			[
-				'source'      => $this->avada_obj->current_avada_fusion_core_path,
-				'destination' => $this->avada_obj->last_version_avada_fusion_core_path,
-			],
-		];
-		$archive_results = $this->files_process_obj->directories_bulk_copy( $copy_list_items );
-		$this->files_process_obj->several_appends( $archive_results, $this->path_obj->main_log_file, false,
-			'Start to Archiving last version of Avada files' );
-
-		$removing_list_items = [];
-		foreach ( $copy_list_items as $copy_list_item ) {
-			$removing_list_items[] = $copy_list_item['source'];
-		}
-		$removing_results = $this->files_process_obj->directories_bulk_remove( $removing_list_items );
-		$this->files_process_obj->several_appends( $removing_results, $this->path_obj->main_log_file, true, null,
-			'End of Archiving last version of Avada files' );
-	}
-
 	public function unzip_avada_last_version_files() {
 		$msn_new_theme_items = [
 			[
@@ -510,7 +455,6 @@ class  Avada_Updater {
 		 * ===============================
 		 * */
 		$this->set_new_path_for_avada_files();
-
 
 
 

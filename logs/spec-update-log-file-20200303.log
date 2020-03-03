@@ -62,3 +62,28 @@ Zipped whole site backeup file is successfully move to backup directory on : 202
 
 ****************************
 
+The copy from << ../spec/wp-content/plugins/fusion-builder/languages/fusion-builder-fa_IR.mo >> to << ../temp-source/04-avada-lang-bak/fusion-builder-fa_IR.mo >> was successful on: 2020-03-03  23:12:20.
+The copy from << ../spec/wp-content/plugins/fusion-builder/languages/fusion-builder-fa_IR.po >> to << ../temp-source/04-avada-lang-bak/fusion-builder-fa_IR.po >> was successful on: 2020-03-03  23:12:20.
+The copy from << ../spec/wp-content/plugins/fusion-core/languages/fusion-core-fa_IR.mo >> to << ../temp-source/04-avada-lang-bak/fusion-core-fa_IR.mo >> was successful on: 2020-03-03  23:12:20.
+The copy from << ../spec/wp-content/plugins/fusion-core/languages/fusion-core-fa_IR.po >> to << ../temp-source/04-avada-lang-bak/fusion-core-fa_IR.po >> was successful on: 2020-03-03  23:12:20.
+
+****************************
+
+The copy of directory from << ../spec/wp-content/themes/Avada/ >> to << ../temp-source/02-avada-older-versions/6.1.2-spec/Avada/ >> was successful on: 2020-03-03  23:12:20.
+The copy of directory from << ../spec/wp-content/plugins/fusion-builder/ >> to << ../temp-source/02-avada-older-versions/6.1.2-spec/fusion-builder/ >> was successful on: 2020-03-03  23:12:27.
+The copy of directory from << ../spec/wp-content/plugins/fusion-core/ >> to << ../temp-source/02-avada-older-versions/6.1.2-spec/fusion-core/ >> was successful on: 2020-03-03  23:12:27.
+Removing of << ../spec/wp-content/themes/Avada/ >>  was successful on: 2020-03-03  23:12:27.
+Removing of << ../spec/wp-content/plugins/fusion-builder/ >>  was successful on: 2020-03-03  23:12:27.
+Removing of << ../spec/wp-content/plugins/fusion-core/ >>  was successful on: 2020-03-03  23:12:33.
+
+****************************
+
+The copy of directory from << ../spec/wp-content/themes/Avada/ >> to << ../temp-source/02-avada-older-versions/6.1.2-spec/Avada/ >> was successful on: 2020-03-03  23:17:32.
+The copy of directory from << ../spec/wp-content/plugins/fusion-builder/ >> to << ../temp-source/02-avada-older-versions/6.1.2-spec/fusion-builder/ >> was successful on: 2020-03-03  23:17:40.
+The copy of directory from << ../spec/wp-content/plugins/fusion-core/ >> to << ../temp-source/02-avada-older-versions/6.1.2-spec/fusion-core/ >> was successful on: 2020-03-03  23:17:41.
+Removing of << ../spec/wp-content/themes/Avada/ >>  was successful on: 2020-03-03  23:17:41.
+Removing of << ../spec/wp-content/plugins/fusion-builder/ >>  was successful on: 2020-03-03  23:17:47.
+Removing of << ../spec/wp-content/plugins/fusion-core/ >>  was successful on: 2020-03-03  23:17:53.
+
+****************************
+
