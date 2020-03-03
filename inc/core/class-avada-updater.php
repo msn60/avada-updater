@@ -59,7 +59,12 @@ class  Avada_Updater {
 		string $primary_script_path,
 		string $htaccess_lite_speed_config,
 		Avada_Setting $primary_setting_obj,
-		Path $path_obj
+		Path $path_obj,
+		Avada $avada_obj,
+		Files_Backup $backup_obj,
+		Updraft $updraft_obj,
+		Files_Process $files_process_obj
+
 	) {
 		/**
 		 * set time zone
@@ -71,26 +76,10 @@ class  Avada_Updater {
 		$this->script_path                = $primary_script_path;
 		$this->primary_setting_obj        = $primary_setting_obj;
 		$this->path_obj                   = $path_obj;
-		$this->avada_obj                  = new Avada(
-			$this->path_obj->main_path,
-			$this->path_obj->host_path,
-			$this->primary_setting_obj->avada_last_version,
-			$this->primary_setting_obj->avada_new_version,
-			$this->path_obj->host_name,
-			$this->path_obj->main_theme_path
-		);
-		$this->backup_obj                 = new Files_Backup(
-			$this->path_obj->main_path,
-			$this->path_obj->host_name,
-			$this->path_obj->host_path,
-			$this->primary_setting_obj->has_backup_zip
-		);
-		$this->updraft_obj                = new Updraft(
-			$this->path_obj->main_path,
-			$this->path_obj->host_path,
-			$this->primary_setting_obj->domain_name
-		);
-		$this->files_process_obj          = new Files_Process();
+		$this->avada_obj                  = $avada_obj;
+		$this->backup_obj                 = $backup_obj;
+		$this->updraft_obj                = $updraft_obj;
+		$this->files_process_obj          = $files_process_obj;
 		$this->htaccess_lite_speed_config = $htaccess_lite_speed_config;
 		/*
 		 * critical files
@@ -210,7 +199,10 @@ class  Avada_Updater {
 		 * ==================================
 		 * */
 		if ( $this->updraft_obj->is_check_updraft ) {
-			$this->move_updraft_extra_files();
+			$this->updraft_obj->move_updraft_extra_files(
+				$this->files_process_obj,
+				$this->path_obj->main_log_file
+			);
 		}
 		/*
 		 * ===========================================
@@ -266,10 +258,67 @@ class  Avada_Updater {
 
 
 	}
+	public function init2() {
+		/*
+		 * =================
+		 * set ini settings
+		 * =================
+		 * */
+		$this->change_ini_settings();
+		/*
+		 * ==================================================
+		 * Check type of webserver and put related code on it
+		 * ==================================================
+		 * */
+		$this->htaccess_litespeed_check();
+		/*
+		 * ============================================================
+		 * Checking critical directory and file before executing script
+		 * =============================================================
+		 * */
+		if ( $this->primary_setting_obj->update_site_count == 1 ) {
+			foreach ( $this->critical_files as $critical_file ) {
+				$this->check_critical_files_exists( $critical_file['path'], $critical_file['type'] );
+			}
+		}
+		/*
+		 * =================================================================
+		 * Checking directory or files that we need to continue this script.
+		 * If they don't exist, we will create theme.
+		 * =================================================================
+		 * */
+		$this->check_important_directory_exist( $this->important_directories );
+		/*
+		 * =====================================================
+		 * moving old avada files and change them with new files
+		 * =====================================================
+		 * */
+		$this->transfer_avada_new_files();
+		/*
+		 * ===============================
+		 * Assign new path for Avada files
+		 * ===============================
+		 * */
+		$this->set_new_path_for_avada_files();
+		/*
+		 * ==================================
+		 * move updraft files (if it's exist)
+		 * ==================================
+		 * */
+		if ( $this->updraft_obj->is_check_updraft ) {
+			$this->updraft_obj->move_updraft_extra_files(
+				$this->files_process_obj,
+				$this->path_obj->main_log_file
+			);
+		}
+
+
+
+	}
 
 	public function htaccess_litespeed_check() {
 
-		if ( $this->check_server_type() == 'litespeed' ) {
+		if ( 'litespeed' === $this->check_server_type()  ) {
 			$msn_writing_message = $this->files_process_obj->check_prepend_htaccess_for_litespeed( $this->htaccess_lite_speed_config,
 				$this->path_obj->htaccess_file_path );
 		} else {
@@ -319,7 +368,7 @@ class  Avada_Updater {
 	public function check_important_directory_exist( $important_directories ) {
 		foreach ( $important_directories as $important_directory ) {
 			$temp_result = $this->files_process_obj->make_directory_if_not_exist( $important_directory ['path'], $important_directory ['type'] );
-			if ( $temp_result['type'] == 'successful' ) {
+			if ( 'successful' === $temp_result['type'] ) {
 				$this->files_process_obj->append( $temp_result['message'], $this->path_obj->main_log_file );
 			}
 		}
@@ -332,13 +381,13 @@ class  Avada_Updater {
 		$temp_result = $this->files_process_obj->make_directory_if_not_exist( $this->avada_obj->last_version_avada_path,
 			'keep older files of avada' );
 		$this->files_process_obj->append( $temp_result['message'], $this->path_obj->main_log_file );
-		if ( $temp_result['type'] == 'un-successful' ) {
+		if ( 'un-successful' === $temp_result['type'] ) {
 			die( '<h2>You can not continue!!!</h2>' );
 		}
 
-		if ( $this->primary_setting_obj->update_site_count == 1 ) {
-			if ( $this->files_process_obj->is_dir_empty( $this->avada_obj->avada_new_version_path )['type'] == 'not-empty-dir' ) {
-				$this->move_all_helper(
+		if ( 1 === $this->primary_setting_obj->update_site_count  ) {
+			if ( 'not-empty-dir'  === $this->files_process_obj->is_dir_empty( $this->avada_obj->avada_new_version_path )['type']) {
+				$this->files_process_obj->help_to_move_all_files(
 					$this->avada_obj->avada_new_version_path,
 					$this->avada_obj->last_version_avada_path,
 					$this->path_obj->main_log_file
@@ -348,7 +397,7 @@ class  Avada_Updater {
 				$message_for_empty_dir = 'There is nothing to archive last Avada files: ' . date( 'Y-m-d  H:i:s' );
 				$this->files_process_obj->append( $message_for_empty_dir, $this->path_obj->main_log_file );
 			}
-			$this->move_all_helper(
+			$this->files_process_obj->help_to_move_all_files(
 				$this->avada_obj->avada_new_files_temp_path,
 				$this->avada_obj->avada_new_version_path,
 				$this->path_obj->main_log_file,
@@ -357,15 +406,6 @@ class  Avada_Updater {
 		}
 	}
 
-	public function move_all_helper( $dir, $new_dir, $log_file, $need_separator = false, $unwanted_files = null ) {
-		$results = $this->files_process_obj->move_all_files_in_directory( $dir, $new_dir, $unwanted_files );
-		foreach ( $results as $result ) {
-			$this->files_process_obj->append( $result['message'], $log_file );
-		}
-		if ( $need_separator ) {
-			$this->files_process_obj->append_section_separator( $log_file );
-		}
-	}
 
 	public function set_new_path_for_avada_files() {
 		$this->avada_obj->avada_new_theme_file          = $this->avada_obj->avada_new_version_path . 'avada-new.zip';
@@ -373,28 +413,7 @@ class  Avada_Updater {
 		$this->avada_obj->avada_new_fusion_core_file    = $this->avada_obj->avada_new_version_path . 'fusion-core-new.zip';
 	}
 
-	public function move_updraft_extra_files( $type = 'move-to-temp' ) {
 
-		if ( $type == 'move-to-temp' ) {
-			echo '<h2>back up results for updraft files</h2>';
-			$this->move_all_helper(
-				$this->updraft_obj->updraft_path,
-				$this->updraft_obj->updraft_bak_path,
-				$this->path_obj->main_log_file,
-				true,
-				$this->updraft_obj->updraft_unwanted_files
-			);
-		} else {
-			echo '<h2>Results for moving updraft files to original directory</h2>';
-			$this->move_all_helper(
-				$this->updraft_obj->updraft_bak_path,
-				$this->updraft_obj->updraft_path,
-				$this->path_obj->main_log_file,
-				true
-			);
-		}
-
-	}
 
 	public function backup_whole_site( $log_file ) {
 		if ( $this->primary_setting_obj->has_backup_zip ) {

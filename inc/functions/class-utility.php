@@ -65,19 +65,6 @@ trait Utility {
 		return rtrim( $string, '/\\' );
 	}
 
-	/*
-	 * Change max_execution_time
-	 * Change memory_limit
-	 * Change max_input_time
-	 * */
-	public function change_ini_settings() {
-		//ini_set( 'max_input_vars', '10000' );
-		set_time_limit( - 1 );
-		/*var_dump( (int) ini_get( 'max_input_time' ) );
-		var_dump( (int) ini_get( 'max_execution_time' ) );
-		var_dump( (int) ini_get( 'memory_limit' ) );
-		var_dump( (int) ini_get( 'max_input_vars' ) );*/
-	}
 
 	/*
 	 * get type of webserver
@@ -94,6 +81,20 @@ trait Utility {
 			return 'nginx';
 		}
 
+	}
+
+	/*
+	 * Change max_execution_time
+	 * Change memory_limit
+	 * Change max_input_time
+	 * */
+	public function change_ini_settings() {
+		//ini_set( 'max_input_vars', '10000' );
+		set_time_limit( - 1 );
+		/*var_dump( (int) ini_get( 'max_input_time' ) );
+		var_dump( (int) ini_get( 'max_execution_time' ) );
+		var_dump( (int) ini_get( 'memory_limit' ) );
+		var_dump( (int) ini_get( 'max_input_vars' ) );*/
 	}
 
 }

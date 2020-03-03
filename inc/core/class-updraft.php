@@ -14,6 +14,8 @@
 namespace Updater\Inc\Core;
 
 use Updater\Inc\Config\Host_config;
+use Updater\Inc\Functions\Files_Process;
+use Updater\Inc\Functions\Path;
 
 
 /**
@@ -85,6 +87,37 @@ class Updraft {
 	 */
 	public function __set( $name, $value ) {
 		$this->$name = $value;
+	}
+
+	/**
+	 * Move extra files of updraft to avoid zipping them in backup files
+	 * @param string $type
+	 */
+	public function move_updraft_extra_files(
+		Files_Process $file_process_obj,
+		string $main_log_file,
+		string $type = 'move-to-temp'
+	) {
+
+		if ( $type == 'move-to-temp' ) {
+			echo '<h2>back up results for updraft files</h2>';
+			$file_process_obj->help_to_move_all_files(
+				$this->updraft_path,
+				$this->updraft_bak_path,
+				$main_log_file,
+				true,
+				$this->updraft_unwanted_files
+			);
+		} else {
+			echo '<h2>Results for moving updraft files to original directory</h2>';
+			$file_process_obj->help_to_move_all_files(
+				$this->updraft_bak_path,
+				$this->updraft_path,
+				$main_log_file,
+				true
+			);
+		}
+
 	}
 
 

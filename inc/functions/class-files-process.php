@@ -24,12 +24,6 @@ namespace Updater\Inc\Functions;
  */
 class Files_Process {
 
-	protected $first;
-
-	public function __construct() {
-
-	}
-
 	/*
 	 * Add a string in the beginning of a file
 	 * */
@@ -565,6 +559,16 @@ class Files_Process {
 			];
 		}
 
+	}
+
+	public function help_to_move_all_files( $dir, $new_dir, $log_file, $need_separator = false, $unwanted_files = null ) {
+		$results = $this->move_all_files_in_directory( $dir, $new_dir, $unwanted_files );
+		foreach ( $results as $result ) {
+			$this->append( $result['message'], $log_file );
+		}
+		if ( $need_separator ) {
+			$this->append_section_separator( $log_file );
+		}
 	}
 
 
