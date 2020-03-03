@@ -40,7 +40,7 @@ class Avada_Setting extends Primary_Setting {
 
 	public function __construct(
 		$script_path,
-		$update_site_count = 1,
+		$update_site_count = 2,
 		$avada_last_version = '6.1.2',
 		$avada_new_version = '6.2.1',
 		$has_backup_zip = false,

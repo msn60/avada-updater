@@ -7,3 +7,58 @@ You must put theme zip file in 01-temp-new-version-files directory!
 
 ****************************
 
+Error message created on: 2020-03-03  22:16:18.
+You must define correct avada file path!
+
+****************************
+
+Error message created on: 2020-03-03  22:16:35.
+You must put fusion core zip file in 01-temp-new-version-files directory!
+
+****************************
+
+The directory for keeping language files of Avada was created succesfully at: 2020-03-03 22:17:46.
+The directory for keeping extra updraft files was created succesfully at: 2020-03-03 22:17:46.
+The directory for keeping whole site files for update process was created succesfully at: 2020-03-03 22:17:46.
+The directory for keeping log files of update process was created succesfully at: 2020-03-03 22:17:46.
+End of checking to be existing important directories
+
+****************************
+
+The directory for keep older files of avada was created succesfully at: 2020-03-03 22:17:46.
+
+advanced-custom-fields-new.zip is copied in ../temp-source/02-avada-older-versions/6.1.2-spec/ successfully at: 2020-03-03 22:17:46.
+avada-new.zip is copied in ../temp-source/02-avada-older-versions/6.1.2-spec/ successfully at: 2020-03-03 22:17:46.
+fusion-builder-new.zip is copied in ../temp-source/02-avada-older-versions/6.1.2-spec/ successfully at: 2020-03-03 22:17:46.
+fusion-core-new.zip is copied in ../temp-source/02-avada-older-versions/6.1.2-spec/ successfully at: 2020-03-03 22:17:46.
+
+advanced-custom-fields-new.zip is copied in ../temp-source/03-avada-new-version-files/ successfully at: 2020-03-03 22:17:46.
+avada-new.zip is copied in ../temp-source/03-avada-new-version-files/ successfully at: 2020-03-03 22:17:46.
+fusion-builder-new.zip is copied in ../temp-source/03-avada-new-version-files/ successfully at: 2020-03-03 22:17:46.
+fusion-core-new.zip is copied in ../temp-source/03-avada-new-version-files/ successfully at: 2020-03-03 22:17:46.
+
+****************************
+
+
+testak is copied in ../temp-source/07-updraft-bak/ successfully at: 2020-03-03 22:17:46.
+testforme is copied in ../temp-source/07-updraft-bak/ successfully at: 2020-03-03 22:17:46.
+testforupdraft.zip is copied in ../temp-source/07-updraft-bak/ successfully at: 2020-03-03 22:17:46.
+
+****************************
+
+Zipping whole site files backup was successfully done on: 2020-03-03  22:45:03.
+
+****************************
+
+
+testak is copied in ../spec/wp-content/updraft/ successfully at: 2020-03-03 22:46:08.
+testforme is copied in ../spec/wp-content/updraft/ successfully at: 2020-03-03 22:46:08.
+testforupdraft.zip is copied in ../spec/wp-content/updraft/ successfully at: 2020-03-03 22:46:08.
+
+****************************
+
+No need to zip Data! The Date for checking is : 2020-03-03  22:48:58
+Zipped whole site backeup file is successfully move to backup directory on : 2020-03-03 22:48:58.
+
+****************************
+
