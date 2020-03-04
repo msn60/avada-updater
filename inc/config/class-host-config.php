@@ -31,9 +31,9 @@ trait Host_config {
 				$host_path        = 'anyl.wpwebmaster.ir/';
 				$is_check_updraft = true;
 				break;
-			case 'aitanrehab':
-				$host_name        = 'aitan';
-				$host_path        = 'aitanrehab/';
+			case 'moblmart':
+				$host_name        = 'moblmart';
+				$host_path        = 'moblmart.com/';
 				$is_check_updraft = false;
 				break;
 			case 'hekmat':

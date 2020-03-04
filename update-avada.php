@@ -61,25 +61,36 @@ $updater_obj         = new Avada_Updater(
 );
 
 /**
+ *
+ * TODO: Change zip method to decrease using physical memory usage
  * TODO: create database backup & move to backup directory
  * TODO: move logfile to temp-source
  * TODO: update a plugin like advance custom fields
  * TODO: remove avada lang from languages directory if it exists
  * TODO: only backup from sites
  * TODO: GUI for this script
+ * TODO: Remove older directory which are archived older versions of avada files
  *
  */
 
 $updater_obj->init();
+
+unset($updater_obj);
+unset($files_process_obj);
+unset($updraft_obj);
+unset($backup_obj);
+unset($avada_obj);
+unset($path_obj);
+unset($primary_setting_obj);
+
+gc_collect_cycles();
+
 /*
 $updater_obj->test_init();
-var_dump( $updater_obj->primary_setting_obj );
-var_dump( $updater_obj->path_obj );
-var_dump( $updater_obj->avada_obj );
-var_dump( $updater_obj->backup_obj );
-var_dump( $updater_obj->updraft_obj );
-var_dump( $updater_obj->critical_files );
-var_dump( $updater_obj->important_directories );*/
+echo 'The script is now using: <strong>' . round(memory_get_usage() / (1024*1024)) . 'MB</strong> of memory.<br>';
+echo 'Peak usage: <strong>' . round(memory_get_peak_usage() / (1024*1024)) . 'MB</strong> of memory.<br><br>';
+
+*/
 
 /*
  * ==================

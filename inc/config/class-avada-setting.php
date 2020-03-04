@@ -43,9 +43,9 @@ class Avada_Setting extends Primary_Setting {
 		$update_site_count = 2,
 		$avada_last_version = '6.1.2',
 		$avada_new_version = '6.2.1',
-		$has_backup_zip = false,
+		$has_backup_zip = true,
 		$script_directory = 'updater',
-		$domain_name = 'ayande',
+		$domain_name = 'wpweb',
 		$main_path = '../temp-source/'
 	) {
 		parent::__construct( $script_path, $has_backup_zip, $script_directory, $domain_name, $main_path );

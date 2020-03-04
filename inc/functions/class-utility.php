@@ -97,6 +97,13 @@ trait Utility {
 		var_dump( (int) ini_get( 'max_input_vars' ) );*/
 	}
 
+	function print_mem() {
+		xdebug_start_gcstats('wpweb.txt');
+		echo 'The script is now using: <strong>' . round( memory_get_usage() / ( 1024 * 1024 ) ) . 'MB</strong> of memory.<br>';
+		echo 'Peak usage: <strong>' . round( memory_get_peak_usage() / ( 1024 * 1024 ) ) . 'MB</strong> of memory.<br><br>';
+
+	}
+
 }
 
 
