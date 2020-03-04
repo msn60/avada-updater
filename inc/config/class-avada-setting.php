@@ -45,7 +45,7 @@ class Avada_Setting extends Primary_Setting {
 		$avada_new_version = '6.2.1',
 		$has_backup_zip = false,
 		$script_directory = 'updater',
-		$domain_name = 'spec',
+		$domain_name = 'ayande',
 		$main_path = '../temp-source/'
 	) {
 		parent::__construct( $script_path, $has_backup_zip, $script_directory, $domain_name, $main_path );

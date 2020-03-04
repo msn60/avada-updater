@@ -333,13 +333,7 @@ class Files_Process {
 	public function copy_file( $source, $destination ) {
 		//check source directory is exists
 		if ( file_exists( $source ) ) {
-			//check if destination directory is exists
-			if ( ! file_exists( str_replace( 'Avada.pot', '', $destination ) ) ) {
-				return [
-					'type'    => false,
-					'message' => "Unfortunately << {$destination} >> directory is not exist. So we can not copy it on: " . date( 'Y-m-d  H:i:s' ) . '!!!',
-				];
-			}
+			// TODO: Check if destination directory is exists
 			$success_message = "The copy from << {$source} >> to << {$destination} >> was successful on: " . date( 'Y-m-d  H:i:s' ) . '.';
 			$failed_message  = "We can not copy from << {$source} >> to << {$destination} >> on: " . date( 'Y-m-d  H:i:s' ) . '!!!';
 			$result          = copy( $source, $destination );

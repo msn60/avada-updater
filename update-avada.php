@@ -70,7 +70,7 @@ $updater_obj         = new Avada_Updater(
  *
  */
 
-$updater_obj->test_init();
+$updater_obj->init();
 /*
 $updater_obj->test_init();
 var_dump( $updater_obj->primary_setting_obj );

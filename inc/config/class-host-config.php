@@ -76,10 +76,10 @@ trait Host_config {
 				$host_path        = 'secondsite.com/';
 				$is_check_updraft = true;
 				break;
-			case 'webmaster':
+			case 'wpweb':
 				$host_name        = 'wpweb';
 				$host_path        = 'wpweb/';
-				$is_check_updraft = false;
+				$is_check_updraft = true;
 				break;
 			case 'spec':
 				$host_name        = 'spec';
@@ -92,8 +92,8 @@ trait Host_config {
 				$is_check_updraft = true;
 				break;
 			default:
-				$host_name        = 'spec';
-				$host_path        = 'spec/';
+				$host_name        = 'empty-dir';
+				$host_path        = 'empty-dir/';
 				$is_check_updraft = true;
 
 		}

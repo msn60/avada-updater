@@ -61,7 +61,7 @@ class Primary_Setting {
 		$script_path,
 		$has_backup_zip = false,
 		$script_directory = 'updater',
-		$domain_name = 'spec',
+		$domain_name = 'wpweb',
 		$main_path = '../temp-source/'
 	) {
 		$this->script_path      = $script_path;
