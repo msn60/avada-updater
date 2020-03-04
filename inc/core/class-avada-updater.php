@@ -241,21 +241,31 @@ class  Avada_Updater {
 		 * Unzipped Avada theme & fusion core & fusion builder
 		 * ===================================================
 		 * */
-		$this->unzip_avada_last_version_files();
+		$this->avada_obj->unzip_avada_last_version_files(
+			$this->files_process_obj,
+			$this->path_obj,
+			$this->path_obj->main_log_file
+		);
 
 		/*
 		 * ===============================================
 		 * Move lang file to related original directories
 		 * ===============================================
 		 * */
-		$this->move_lang_files();
+		$this->avada_obj->move_lang_files(
+			$this->files_process_obj,
+			$this->path_obj->main_log_file
+		);
 
 		/*
 		 * =======================================
 		 * Copy new avada.pot to Avada child theme
 		 * =======================================
 		 * */
-		$this->copy_new_avada_pot();
+		$this->avada_obj->copy_new_avada_pot(
+			$this->files_process_obj,
+			$this->path_obj->main_log_file
+		);
 
 
 		/*
@@ -370,84 +380,11 @@ class  Avada_Updater {
 		$this->avada_obj->avada_new_fusion_core_file    = $this->avada_obj->avada_new_version_path . 'fusion-core-new.zip';
 	}
 
-	public function unzip_avada_last_version_files() {
-		$msn_new_theme_items = [
-			[
-				'source_file'      => $this->avada_obj->avada_new_theme_file,
-				'destination_path' => $this->path_obj->main_theme_path,
-				'check_directory'  => $this->avada_obj->current_avada_theme_path,
-			],
-			[
-				'source_file'      => $this->avada_obj->avada_new_fusion_builder_file,
-				'destination_path' => $this->path_obj->main_plugin_path,
-				'check_directory'  => $this->avada_obj->current_avada_fusion_builder_path,
-			],
-			[
-				'source_file'      => $this->avada_obj->avada_new_fusion_core_file,
-				'destination_path' => $this->path_obj->main_plugin_path,
-				'check_directory'  => $this->avada_obj->current_avada_fusion_core_path,
-			],
-		];
-
-		foreach ( $msn_new_theme_items as $msn_new_theme_item ) {
-			if ( ! file_exists( $msn_new_theme_item['check_directory'] ) ) {
-				$msn_unzipping_result = $this->files_process_obj->unzip_data( $msn_new_theme_item['source_file'],
-					$msn_new_theme_item['destination_path'] );
-				$this->files_process_obj->append( $msn_unzipping_result['message'], $this->path_obj->main_log_file );
-			} else {
-				$msn_unzipping_unsuccessful_message
-					= "We did not extract << {$msn_new_theme_item['source_file']} >> due to existing << {$msn_new_theme_item['destination_path']} >> directory!!!";
-				$this->files_process_obj->append( $msn_unzipping_unsuccessful_message, $this->path_obj->main_log_file );
-			}
-
-		}
-		$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file );
-	}
-
-	public function move_lang_files() {
-		$lang_list_items = [
-			[
-				'destination_file_name' => $this->avada_obj->current_avada_fusion_builder_mo_file,
-				'source_path'           => $this->avada_obj->backup_avada_fusion_builder_mo_file,
-			],
-			[
-				'destination_file_name' => $this->avada_obj->current_avada_fusion_builder_po_file,
-				'source_path'           => $this->avada_obj->backup_avada_fusion_builder_po_file,
-			],
-			[
-				'destination_file_name' => $this->avada_obj->current_avada_fusion_core_mo_file,
-				'source_path'           => $this->avada_obj->backup_avada_fusion_core_mo_file,
-			],
-			[
-				'destination_file_name' => $this->avada_obj->current_avada_fusion_core_po_file,
-				'source_path'           => $this->avada_obj->backup_avada_fusion_core_po_file,
-			],
-
-		];
-
-		$results = $this->files_process_obj->files_bulk_move( $lang_list_items );
-		$this->files_process_obj->several_appends( $results, $this->path_obj->main_log_file, true, 'Start to backup lang files',
-			'End of backup lang files' );
-
-	}
 
 	/**
-	 * copy new avada.pot file in child theme
+	 * Initialize Avada update process for test
 	 */
-	public function copy_new_avada_pot() {
-		$remove_pot_file_result = $this->files_process_obj->remove_file( $this->avada_obj->avada_child_theme_lang_pot_file_path );
-		$this->files_process_obj->append( $remove_pot_file_result ['message'], $this->path_obj->main_log_file );
-		$copy_original_pot_file_result = $this->files_process_obj->copy_file( $this->avada_obj->avada_new_lang_pot_file_path,
-			$this->avada_obj->avada_child_theme_lang_pot_file_path );
-		$this->files_process_obj->append( $copy_original_pot_file_result ['message'], $this->path_obj->main_log_file );
-		$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file );
-	}
-
-	/**
-	 * Initialize Avada update process 2
-	 */
-	public function init2() {
-
+	public function test_init() {
 
 		/*
 		 * ===============================
@@ -455,8 +392,10 @@ class  Avada_Updater {
 		 * ===============================
 		 * */
 		$this->set_new_path_for_avada_files();
-
-
+		$this->avada_obj->copy_new_avada_pot(
+			$this->files_process_obj,
+			$this->path_obj->main_log_file
+		);
 
 	}
 

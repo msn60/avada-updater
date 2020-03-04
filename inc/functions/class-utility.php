@@ -46,7 +46,7 @@ trait Utility {
 	 * @return string String with trailing slash added.
 	 */
 	public function trailingslashit( $string ) {
-		return untrailingslashit( $string ) . '/';
+		return $this->untrailingslashit( $string ) . '/';
 	}
 
 	/**

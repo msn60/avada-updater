@@ -14,6 +14,7 @@
 namespace Updater\Inc\Core;
 
 use Updater\Inc\Functions\Files_Process;
+use Updater\Inc\Functions\Path;
 
 /**
  * Class Avada
@@ -213,6 +214,107 @@ class Avada {
 		$removing_results = $files_process_obj->directories_bulk_remove( $removing_list_items );
 		$files_process_obj->several_appends( $removing_results, $main_log_file, true, null,
 			'End of Archiving last version of Avada files' );
+	}
+
+	/**
+	 * Unzipped Avada theme & fusion core & fusion builder
+	 *
+	 * @param Files_Process $files_process_obj
+	 * @param Path          $path_obj
+	 * @param string        $main_log_file
+	 */
+	public function unzip_avada_last_version_files(
+		Files_Process $files_process_obj,
+		Path $path_obj,
+		$main_log_file
+	) {
+		$msn_new_theme_items = [
+			[
+				'source_file'      => $this->avada_new_theme_file,
+				'destination_path' => $path_obj->main_theme_path,
+				'check_directory'  => $this->current_avada_theme_path,
+			],
+			[
+				'source_file'      => $this->avada_new_fusion_builder_file,
+				'destination_path' => $path_obj->main_plugin_path,
+				'check_directory'  => $this->current_avada_fusion_builder_path,
+			],
+			[
+				'source_file'      => $this->avada_new_fusion_core_file,
+				'destination_path' => $path_obj->main_plugin_path,
+				'check_directory'  => $this->current_avada_fusion_core_path,
+			],
+		];
+
+		foreach ( $msn_new_theme_items as $msn_new_theme_item ) {
+			if ( ! file_exists( $msn_new_theme_item['check_directory'] ) ) {
+				$msn_unzipping_result = $files_process_obj->unzip_data( $msn_new_theme_item['source_file'],
+					$msn_new_theme_item['destination_path'] );
+				$files_process_obj->append( $msn_unzipping_result['message'], $main_log_file );
+			} else {
+				$msn_unzipping_unsuccessful_message
+					= "We did not extract << {$msn_new_theme_item['source_file']} >> due to existing << {$msn_new_theme_item['destination_path']} >> directory!!!";
+				$files_process_obj->append( $msn_unzipping_unsuccessful_message, $main_log_file );
+			}
+
+		}
+		$files_process_obj->append_section_separator( $main_log_file );
+	}
+
+	/**
+	 * Move lang file to related original directories
+	 *
+	 * @param Files_Process $files_process_obj
+	 * @param string        $main_log_file
+	 */
+	public function move_lang_files(
+		Files_Process $files_process_obj,
+		$main_log_file
+	) {
+		$lang_list_items = [
+			[
+				'destination_file_name' => $this->current_avada_fusion_builder_mo_file,
+				'source_path'           => $this->backup_avada_fusion_builder_mo_file,
+			],
+			[
+				'destination_file_name' => $this->current_avada_fusion_builder_po_file,
+				'source_path'           => $this->backup_avada_fusion_builder_po_file,
+			],
+			[
+				'destination_file_name' => $this->current_avada_fusion_core_mo_file,
+				'source_path'           => $this->backup_avada_fusion_core_mo_file,
+			],
+			[
+				'destination_file_name' => $this->current_avada_fusion_core_po_file,
+				'source_path'           => $this->backup_avada_fusion_core_po_file,
+			],
+
+		];
+
+		// TODO : Check if translation files are exists or not, then move files
+
+		$results = $files_process_obj->files_bulk_move( $lang_list_items );
+		$files_process_obj->several_appends( $results, $main_log_file, true, 'Start to backup lang files',
+			'End of backup lang files' );
+
+	}
+
+	/**
+	 * copy new avada.pot file in child theme
+	 *
+	 * @param Files_Process $files_process_obj
+	 * @param string        $main_log_file
+	 */
+	public function copy_new_avada_pot(
+		Files_Process $files_process_obj,
+		$main_log_file
+	) {
+		$remove_pot_file_result = $files_process_obj->remove_file( $this->avada_child_theme_lang_pot_file_path );
+		$files_process_obj->append( $remove_pot_file_result ['message'], $main_log_file );
+		$copy_original_pot_file_result = $files_process_obj->copy_file( $this->avada_new_lang_pot_file_path,
+			$this->avada_child_theme_lang_pot_file_path );
+		$files_process_obj->append( $copy_original_pot_file_result ['message'], $main_log_file );
+		$files_process_obj->append_section_separator( $main_log_file );
 	}
 
 

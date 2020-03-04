@@ -153,60 +153,6 @@ class Files_Process {
 		];
 	}
 
-	public function move_all_files_in_directory( $dir, $new_dir, $unwanted_files = [] ) {
-		// Open a known directory, and proceed to read its contents
-		if ( is_dir( $dir ) ) {
-			if ( $dh = opendir( $dir ) ) {
-				$results[] = null;
-				while ( ( $file = readdir( $dh ) ) !== false ) {
-					//exclude unwanted
-					if ( $file == "." ) {
-						continue;
-					}
-					if ( $file == ".." ) {
-						continue;
-					}
-					if ( ! empty( $unwanted_files ) ) {
-						foreach ( $unwanted_files as $unwanted_file ) {
-							if ( $file == $unwanted_file ) {
-								continue 2;
-							}
-						}
-					}
-
-					//if ($file=="index.php") continue; for example if you have index.php in the folder
-					if ( rename( $dir . '/' . $file, $new_dir . '/' . $file ) ) {
-						$message   = "{$file} is copied in {$new_dir} successfully at: " . date( 'Y-m-d H:i:s' ) . '.';
-						$results[] = [
-							'type'    => 'successful',
-							'message' => $message,
-						];
-
-						//if files you are moving are images you can print it from
-						//new folder to be sure they are there
-					} else {
-						$message   = "{$file} was successfully copied in {$new_dir}  at: " . date( 'Y-m-d H:i:s' ) . '.';
-						$results[] = [
-							'type'    => 'un-successful',
-							'message' => $message,
-						];
-					}
-				}
-				closedir( $dh );
-
-				return $results;
-			}
-		}
-
-		return [
-			[
-				'type'    => 'un-successful',
-				'message' => "<< {$dir}  >> is not a valid dir!!!"
-			]
-		];
-	}
-
-
 	/**
 	 * @param array $list_items
 	 *
@@ -220,7 +166,6 @@ class Files_Process {
 
 		return $results;
 	}
-
 
 	/**
 	 * @param string $old_path
@@ -258,10 +203,6 @@ class Files_Process {
 
 	}
 
-	/*
-	 * Function to Copy all folders and files in a directory
-	 * */
-
 	public function directories_bulk_copy( $list_items ) {
 		$results = [];
 		foreach ( $list_items as $list_item ) {
@@ -270,6 +211,10 @@ class Files_Process {
 
 		return $results;
 	}
+
+	/*
+	 * Function to Copy all folders and files in a directory
+	 * */
 
 	public function copy_directory( $source, $destination ) {
 		if ( is_dir( $source ) ) {
@@ -296,9 +241,6 @@ class Files_Process {
 		];
 	}
 
-	/*
-	 * Bulk copy function for copying many files in one process
-	 * */
 	public function directories_bulk_remove( $list_items ) {
 		$results = [];
 		foreach ( $list_items as $list_item ) {
@@ -307,6 +249,10 @@ class Files_Process {
 
 		return $results;
 	}
+
+	/*
+	 * Bulk copy function for copying many files in one process
+	 * */
 
 	public function remove_directory( $dir ) {
 		$successful_message   = "Removing of << {$dir} >>  was successful on: " . date( 'Y-m-d  H:i:s' ) . '.';
@@ -342,7 +288,6 @@ class Files_Process {
 		];
 	}
 
-
 	/**
 	 * @param $source
 	 *
@@ -372,9 +317,6 @@ class Files_Process {
 		}
 	}
 
-	/*
-	 * Bulk copy function for copying many files in one process
-	 * */
 	public function files_bulk_copy( $list_items ) {
 		$results = [];
 		foreach ( $list_items as $list_item ) {
@@ -385,11 +327,19 @@ class Files_Process {
 	}
 
 	/*
-	 * function to copy a file
+	 * Bulk copy function for copying many files in one process
 	 * */
-	public function copy_file( $source, $destination ) {
-		if ( file_exists( $source ) ) {
 
+	public function copy_file( $source, $destination ) {
+		//check source directory is exists
+		if ( file_exists( $source ) ) {
+			//check if destination directory is exists
+			if ( ! file_exists( str_replace( 'Avada.pot', '', $destination ) ) ) {
+				return [
+					'type'    => false,
+					'message' => "Unfortunately << {$destination} >> directory is not exist. So we can not copy it on: " . date( 'Y-m-d  H:i:s' ) . '!!!',
+				];
+			}
 			$success_message = "The copy from << {$source} >> to << {$destination} >> was successful on: " . date( 'Y-m-d  H:i:s' ) . '.';
 			$failed_message  = "We can not copy from << {$source} >> to << {$destination} >> on: " . date( 'Y-m-d  H:i:s' ) . '!!!';
 			$result          = copy( $source, $destination );
@@ -413,9 +363,8 @@ class Files_Process {
 		}
 	}
 
-
 	/*
-	 * function to zip data with its related permissions in linux os
+	 * function to copy a file
 	 * */
 
 	public function zip_data( $source, $destination, $os = 'linux' ) {
@@ -536,9 +485,11 @@ class Files_Process {
 		}
 	}
 
+
 	/*
-	 * function to unzip data with its related permissions in linux os
+	 * function to zip data with its related permissions in linux os
 	 * */
+
 	function unzip_data( $file, $destination_path ) {
 		$zip = new \ZipArchive;
 		$res = $zip->open( $file );
@@ -561,6 +512,10 @@ class Files_Process {
 
 	}
 
+	/*
+	 * function to unzip data with its related permissions in linux os
+	 * */
+
 	public function help_to_move_all_files( $dir, $new_dir, $log_file, $need_separator = false, $unwanted_files = null ) {
 		$results = $this->move_all_files_in_directory( $dir, $new_dir, $unwanted_files );
 		foreach ( $results as $result ) {
@@ -569,6 +524,59 @@ class Files_Process {
 		if ( $need_separator ) {
 			$this->append_section_separator( $log_file );
 		}
+	}
+
+	public function move_all_files_in_directory( $dir, $new_dir, $unwanted_files = [] ) {
+		// Open a known directory, and proceed to read its contents
+		if ( is_dir( $dir ) ) {
+			if ( $dh = opendir( $dir ) ) {
+				$results[] = null;
+				while ( ( $file = readdir( $dh ) ) !== false ) {
+					//exclude unwanted
+					if ( $file == "." ) {
+						continue;
+					}
+					if ( $file == ".." ) {
+						continue;
+					}
+					if ( ! empty( $unwanted_files ) ) {
+						foreach ( $unwanted_files as $unwanted_file ) {
+							if ( $file == $unwanted_file ) {
+								continue 2;
+							}
+						}
+					}
+
+					//if ($file=="index.php") continue; for example if you have index.php in the folder
+					if ( rename( $dir . '/' . $file, $new_dir . '/' . $file ) ) {
+						$message   = "{$file} is copied in {$new_dir} successfully at: " . date( 'Y-m-d H:i:s' ) . '.';
+						$results[] = [
+							'type'    => 'successful',
+							'message' => $message,
+						];
+
+						//if files you are moving are images you can print it from
+						//new folder to be sure they are there
+					} else {
+						$message   = "{$file} was successfully copied in {$new_dir}  at: " . date( 'Y-m-d H:i:s' ) . '.';
+						$results[] = [
+							'type'    => 'un-successful',
+							'message' => $message,
+						];
+					}
+				}
+				closedir( $dh );
+
+				return $results;
+			}
+		}
+
+		return [
+			[
+				'type'    => 'un-successful',
+				'message' => "<< {$dir}  >> is not a valid dir!!!"
+			]
+		];
 	}
 
 

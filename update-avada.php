@@ -59,10 +59,21 @@ $updater_obj         = new Avada_Updater(
 	$updraft_obj,
 	$files_process_obj
 );
-//var_dump($updater_obj);
 
-$updater_obj->init2();
-/*var_dump( $updater_obj->primary_setting_obj );
+/**
+ * TODO: create database backup & move to backup directory
+ * TODO: move logfile to temp-source
+ * TODO: update a plugin like advance custom fields
+ * TODO: remove avada lang from languages directory if it exists
+ * TODO: only backup from sites
+ * TODO: GUI for this script
+ *
+ */
+
+$updater_obj->test_init();
+/*
+$updater_obj->test_init();
+var_dump( $updater_obj->primary_setting_obj );
 var_dump( $updater_obj->path_obj );
 var_dump( $updater_obj->avada_obj );
 var_dump( $updater_obj->backup_obj );
