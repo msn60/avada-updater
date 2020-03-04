@@ -186,7 +186,11 @@ class  Avada_Updater {
 		 * moving old avada files and change them with new files
 		 * =====================================================
 		 * */
-		$this->transfer_avada_new_files();
+		$this->avada_obj->transfer_avada_new_files(
+			$this->files_process_obj,
+			$this->path_obj->main_log_file,
+			$this->primary_setting_obj->update_site_count
+		);
 		/*
 		 * ===============================
 		 * Assign new path for Avada files
@@ -345,34 +349,6 @@ class  Avada_Updater {
 
 	}
 
-	public function transfer_avada_new_files() {
-		$temp_result = $this->files_process_obj->make_directory_if_not_exist( $this->avada_obj->last_version_avada_path,
-			'keep older files of avada' );
-		$this->files_process_obj->append( $temp_result['message'], $this->path_obj->main_log_file );
-		if ( 'un-successful' === $temp_result['type'] ) {
-			die( '<h2>You can not continue!!!</h2>' );
-		}
-
-		if ( 1 === $this->primary_setting_obj->update_site_count ) {
-			if ( 'not-empty-dir' === $this->files_process_obj->is_dir_empty( $this->avada_obj->avada_new_version_path )['type'] ) {
-				$this->files_process_obj->help_to_move_all_files(
-					$this->avada_obj->avada_new_version_path,
-					$this->avada_obj->last_version_avada_path,
-					$this->path_obj->main_log_file
-				);
-
-			} else {
-				$message_for_empty_dir = 'There is nothing to archive last Avada files: ' . date( 'Y-m-d  H:i:s' );
-				$this->files_process_obj->append( $message_for_empty_dir, $this->path_obj->main_log_file );
-			}
-			$this->files_process_obj->help_to_move_all_files(
-				$this->avada_obj->avada_new_files_temp_path,
-				$this->avada_obj->avada_new_version_path,
-				$this->path_obj->main_log_file,
-				true
-			);
-		}
-	}
 
 	public function set_new_path_for_avada_files() {
 		$this->avada_obj->avada_new_theme_file          = $this->avada_obj->avada_new_version_path . 'avada-new.zip';
@@ -392,10 +368,6 @@ class  Avada_Updater {
 		 * ===============================
 		 * */
 		$this->set_new_path_for_avada_files();
-		$this->avada_obj->copy_new_avada_pot(
-			$this->files_process_obj,
-			$this->path_obj->main_log_file
-		);
 
 	}
 

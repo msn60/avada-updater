@@ -143,6 +143,46 @@ class Avada {
 	}
 
 	/**
+	 * Move old avada files and change them with new files
+	 *
+	 * @param Files_Process $files_process_obj
+	 * @param string        $main_log_file
+	 * @param int           $update_site_count
+	 */
+	public function transfer_avada_new_files(
+		Files_Process $files_process_obj,
+		$main_log_file,
+		$update_site_count
+	) {
+		$temp_result = $files_process_obj->make_directory_if_not_exist( $this->last_version_avada_path,
+			'keep older files of avada' );
+		$files_process_obj->append( $temp_result['message'], $main_log_file );
+		if ( 'un-successful' === $temp_result['type'] ) {
+			die( '<h2>You can not continue!!!</h2>' );
+		}
+
+		if ( 1 === $update_site_count ) {
+			if ( 'not-empty-dir' === $files_process_obj->is_dir_empty( $this->avada_new_version_path )['type'] ) {
+				$files_process_obj->help_to_move_all_files(
+					$this->avada_new_version_path,
+					$this->last_version_avada_path,
+					$main_log_file
+				);
+
+			} else {
+				$message_for_empty_dir = 'There is nothing to archive last Avada files: ' . date( 'Y-m-d  H:i:s' );
+				$files_process_obj->append( $message_for_empty_dir, $main_log_file );
+			}
+			$files_process_obj->help_to_move_all_files(
+				$this->avada_new_files_temp_path,
+				$this->avada_new_version_path,
+				$main_log_file,
+				true
+			);
+		}
+	}
+
+	/**
 	 * backup from mo & po language files from fusion core and fusion builder
 	 */
 	public function backup_language_files(
