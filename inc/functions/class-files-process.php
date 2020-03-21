@@ -25,9 +25,14 @@ namespace Updater\Inc\Functions;
 class Files_Process {
 	use Utility;
 
-	/*
+	/**
 	 * Add a string in the beginning of a file
-	 * */
+	 *
+	 * @param $string
+	 * @param $filename
+	 *
+	 * @return bool
+	 */
 	public function prepend( $string, $filename ) {
 		$fileContent = file_get_contents( $filename );
 		$result      = file_put_contents( $filename, $string . "\n" . $fileContent );
@@ -38,6 +43,14 @@ class Files_Process {
 		}
 	}
 
+	/**
+	 * Prepend to htaccess file
+	 *
+	 * @param $string
+	 * @param $filename
+	 *
+	 * @return string
+	 */
 	public function check_prepend_htaccess_for_litespeed( $string, $filename ) {
 
 		$fileContent = @file_get_contents( $filename );
@@ -57,10 +70,15 @@ class Files_Process {
 
 	}
 
-	/*
-	 * Write on log file
-	 * */
-
+	/**
+	 * Several appends to append several messages in a file recursively
+	 *
+	 * @param      $items
+	 * @param      $log_file
+	 * @param bool $is_need_separator
+	 * @param null $starting_message
+	 * @param null $ending_message
+	 */
 	public function several_appends( $items, $log_file, $is_need_separator = true, $starting_message = null, $ending_message = null ) {
 		if ( $starting_message !== null ) {
 			echo "<h2>{$starting_message}</h2>";
@@ -78,6 +96,13 @@ class Files_Process {
 
 	}
 
+	/**
+	 * Append a message into a file
+	 *
+	 * @param      $string
+	 * @param      $file_name
+	 * @param bool $show_on_screen
+	 */
 	public function append( $string, $file_name, $show_on_screen = true ) {
 
 		$string = $string . PHP_EOL;
@@ -95,18 +120,23 @@ class Files_Process {
 		}
 	}
 
-	/*
-	 * write several results on log file continuously
-	 * */
-
+	/**
+	 * Append section separator into a file
+	 *
+	 * @param $file_name
+	 */
 	public function append_section_separator( $file_name ) {
 		$this->append( PHP_EOL . '****************************' . PHP_EOL, $file_name );
 	}
 
-	/*
+	/**
 	 * check directory exists and if not, it will create
-	 * */
-
+	 *
+	 * @param $path
+	 * @param $type
+	 *
+	 * @return array
+	 */
 	public function make_directory_if_not_exist( $path, $type ) {
 		if ( ! file_exists( $path ) ) {
 			$result = mkdir( $path, 0755 );
@@ -131,10 +161,13 @@ class Files_Process {
 
 	}
 
-
-	/*
+	/**
 	 * Check is directory empty or not
-	 * */
+	 *
+	 * @param $dir_name
+	 *
+	 * @return array
+	 */
 	public function is_dir_empty( $dir_name ) {
 		if ( ! is_dir( $dir_name ) ) {
 			return [
@@ -155,6 +188,8 @@ class Files_Process {
 	}
 
 	/**
+	 * Bulk move for files
+	 *
 	 * @param array $list_items
 	 *
 	 * @return array
@@ -169,6 +204,8 @@ class Files_Process {
 	}
 
 	/**
+	 * Move file method
+	 *
 	 * @param string $old_path
 	 * @param string $new_path
 	 * @param string $type
@@ -204,6 +241,13 @@ class Files_Process {
 
 	}
 
+	/**
+	 * Bulk copy for directories
+	 *
+	 * @param $list_items
+	 *
+	 * @return array
+	 */
 	public function directories_bulk_copy( $list_items ) {
 		$results = [];
 		foreach ( $list_items as $list_item ) {
@@ -213,10 +257,14 @@ class Files_Process {
 		return $results;
 	}
 
-	/*
+	/**
 	 * Function to Copy all folders and files in a directory
-	 * */
-
+	 *
+	 * @param $source
+	 * @param $destination
+	 *
+	 * @return array
+	 */
 	public function copy_directory( $source, $destination ) {
 		if ( is_dir( $source ) ) {
 			@mkdir( $destination );
@@ -242,6 +290,13 @@ class Files_Process {
 		];
 	}
 
+	/**
+	 * Bulk remove for directories
+	 *
+	 * @param $list_items
+	 *
+	 * @return array
+	 */
 	public function directories_bulk_remove( $list_items ) {
 		$results = [];
 		foreach ( $list_items as $list_item ) {
@@ -251,10 +306,13 @@ class Files_Process {
 		return $results;
 	}
 
-	/*
-	 * Bulk copy function for copying many files in one process
-	 * */
-
+	/**
+	 * Remove directory method
+	 *
+	 * @param $dir
+	 *
+	 * @return array
+	 */
 	public function remove_directory( $dir ) {
 		$successful_message   = "Removing of << {$dir} >>  was successful on: " . date( 'Y-m-d  H:i:s' ) . '.';
 		$unsuccessful_message = "We can not remove << {$dir} >>   on: " . date( 'Y-m-d  H:i:s' ) . '!!!';
@@ -290,6 +348,8 @@ class Files_Process {
 	}
 
 	/**
+	 * Remove file method
+	 *
 	 * @param $source
 	 *
 	 * @return array
@@ -318,6 +378,13 @@ class Files_Process {
 		}
 	}
 
+	/**
+	 * Bulk copy function for copying many files in one process
+	 *
+	 * @param $list_items
+	 *
+	 * @return array
+	 */
 	public function files_bulk_copy( $list_items ) {
 		$results = [];
 		foreach ( $list_items as $list_item ) {
@@ -327,10 +394,14 @@ class Files_Process {
 		return $results;
 	}
 
-	/*
-	 * Bulk copy function for copying many files in one process
-	 * */
-
+	/**
+	 * Copy file method
+	 *
+	 * @param $source
+	 * @param $destination
+	 *
+	 * @return array
+	 */
 	public function copy_file( $source, $destination ) {
 		//check source directory is exists
 		if ( file_exists( $source ) ) {
@@ -358,10 +429,16 @@ class Files_Process {
 		}
 	}
 
-	/*
-	 * function to copy a file
-	 * */
 
+	/**
+	 * Zip data method
+	 *
+	 * @param        $source
+	 * @param        $destination
+	 * @param string $os
+	 *
+	 * @return array
+	 */
 	public function zip_data( $source, $destination, $os = 'linux' ) {
 
 		$successful_zipping_message   = 'Zipping whole site files backup was successfully done on: ' . date( 'Y-m-d  H:i:s' ) . '.';
@@ -453,11 +530,11 @@ class Files_Process {
 					}
 
 					// Template Zip archive will be created only after closing object
-					$result = $templateArchive->close();
-					$files = null;
+					$result          = $templateArchive->close();
+					$files           = null;
 					$templateArchive = null;
-					unset($files);
-					unset($templateArchive);
+					unset( $files );
+					unset( $templateArchive );
 					if ( $result ) {
 						return [
 							'result'  => $result,
@@ -482,11 +559,14 @@ class Files_Process {
 		}
 	}
 
-
-	/*
-	 * function to zip data with its related permissions in linux os
-	 * */
-
+	/**
+	 * Unzip data method
+	 *
+	 * @param $file
+	 * @param $destination_path
+	 *
+	 * @return array
+	 */
 	function unzip_data( $file, $destination_path ) {
 		$zip = new \ZipArchive;
 		$res = $zip->open( $file );
@@ -509,10 +589,15 @@ class Files_Process {
 
 	}
 
-	/*
-	 * function to unzip data with its related permissions in linux os
-	 * */
-
+	/**
+	 * Move all file helper method
+	 *
+	 * @param      $dir
+	 * @param      $new_dir
+	 * @param      $log_file
+	 * @param bool $need_separator
+	 * @param null $unwanted_files
+	 */
 	public function help_to_move_all_files( $dir, $new_dir, $log_file, $need_separator = false, $unwanted_files = null ) {
 		$results = $this->move_all_files_in_directory( $dir, $new_dir, $unwanted_files );
 		foreach ( $results as $result ) {
@@ -523,6 +608,15 @@ class Files_Process {
 		}
 	}
 
+	/**
+	 * Move all files in a directory
+	 *
+	 * @param       $dir
+	 * @param       $new_dir
+	 * @param array $unwanted_files
+	 *
+	 * @return array
+	 */
 	public function move_all_files_in_directory( $dir, $new_dir, $unwanted_files = [] ) {
 		// Open a known directory, and proceed to read its contents
 		if ( is_dir( $dir ) ) {
