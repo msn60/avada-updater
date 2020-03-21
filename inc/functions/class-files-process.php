@@ -23,6 +23,7 @@ namespace Updater\Inc\Functions;
  * @author     Mehdi Soltani <soltani.n.mehdi@gmail.com>
  */
 class Files_Process {
+	use Utility;
 
 	/*
 	 * Add a string in the beginning of a file
@@ -453,7 +454,10 @@ class Files_Process {
 
 					// Template Zip archive will be created only after closing object
 					$result = $templateArchive->close();
-
+					$files = null;
+					$templateArchive = null;
+					unset($files);
+					unset($templateArchive);
 					if ( $result ) {
 						return [
 							'result'  => $result,
@@ -465,7 +469,6 @@ class Files_Process {
 							'message' => $unsuccessful_zipping_message,
 						];
 					}
-
 					//return $zip->close();
 				}
 
@@ -573,5 +576,68 @@ class Files_Process {
 		];
 	}
 
+	/**
+	 * Search and replace method
+	 *
+	 * @param $file_name
+	 * @param $search_and_replace_items
+	 */
+	public function do_search_and_replace( $file_name, $search_and_replace_items ) {
+		$str = file_get_contents( $file_name );
+		foreach ( $search_and_replace_items as $search_and_replace_item ) {
+			$str = str_replace( $search_and_replace_item['search'], $search_and_replace_item['replace'], $str );
+		}
+		$result = file_put_contents( $file_name, $str );
+		if ( $result === false ) {
+			return [
+				'type'    => false,
+				'message' => "Doing Search and Replace in {$file_name} was not successful at: " . date( 'Y-m-d H:i:s' ) . '!!!',
+			];
+		} else {
+			return [
+				'type'    => true,
+				'message' => "Doing Search and Replace in {$file_name} was successful at: " . date( 'Y-m-d H:i:s' ) . '.',
+			];
+		}
+	}
+
+	/**
+	 * Bulk rename function for renaming many files in one process
+	 *
+	 * @param $list_items
+	 *
+	 * @return array
+	 */
+	public function files_bulk_rename( $list_items ) {
+		$results = [];
+		foreach ( $list_items as $list_item ) {
+			$results[] = $this->rename_file( $list_item['old_name'], $list_item['new_name'] );
+		}
+
+		return $results;
+	}
+
+	/**
+	 * Rename file method
+	 *
+	 * @param $old_name
+	 * @param $new_name
+	 *
+	 * @return array
+	 */
+	public function rename_file( $old_name, $new_name ) {
+		$result = rename( $old_name, $new_name );
+		if ( $result ) {
+			return [
+				'type'    => true,
+				'message' => "Changing name of << {$old_name} >> to << {$new_name} >>  was successful at: " . date( 'Y-m-d H:i:s' ) . '.',
+			];
+		} else {
+			return [
+				'type'    => false,
+				'message' => "Changing name of << {$old_name} >> to << {$new_name} >>  was not successful at: " . date( 'Y-m-d H:i:s' ) . '!!!',
+			];
+		}
+	}
 
 }
