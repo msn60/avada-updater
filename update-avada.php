@@ -42,6 +42,7 @@ $backup_obj          = new Files_Backup(
 	$path_obj->host_name,
 	$path_obj->host_path,
 	$primary_setting_obj->has_backup_zip,
+	$primary_script_path,
 	$primary_setting_obj->script_directory
 );
 $updraft_obj         = new Updraft(
@@ -77,13 +78,13 @@ $updater_obj         = new Avada_Updater(
 //$updater_obj->init_for_local_test();
 $updater_obj->init();
 
-unset($updater_obj);
-unset($files_process_obj);
-unset($updraft_obj);
-unset($backup_obj);
-unset($avada_obj);
-unset($path_obj);
-unset($primary_setting_obj);
+unset( $updater_obj );
+unset( $files_process_obj );
+unset( $updraft_obj );
+unset( $backup_obj );
+unset( $avada_obj );
+unset( $path_obj );
+unset( $primary_setting_obj );
 
 gc_collect_cycles();
 

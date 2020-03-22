@@ -33,7 +33,7 @@ class Files_Backup {
 	private $backup_zip_file_name;
 	private $backup_zip_file_path;
 
-	public function __construct( $main_path, $host_name, $host_path, $has_file_backup, $script_directory ) {
+	public function __construct( $main_path, $host_name, $host_path, $has_file_backup, $primary_script_path, $script_directory) {
 		/**
 		 * set time zone
 		 */
@@ -44,9 +44,7 @@ class Files_Backup {
 		} else {
 			$this->backup_zip_file_name = $host_name . '-files-backup-' . date( 'Ymd' ) . '.zip';
 		}
-		$temp_script_path           = dirname( __FILE__ );
-		$temp_str_for_search        = $script_directory . '\inc\functions';
-		$temp_script_path           = str_replace( $temp_str_for_search, '', $temp_script_path );
+		$temp_script_path           = str_replace( $script_directory, '',$primary_script_path );
 		$this->backup_zip_file_path = $temp_script_path . $host_path . $this->backup_zip_file_name;
 
 	}
