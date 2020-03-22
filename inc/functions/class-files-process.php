@@ -670,6 +670,24 @@ class Files_Process {
 		];
 	}
 
+
+	/**
+	 * Bulk search and replace function for replacing content in many files in one process
+	 *
+	 * @param $list_items
+	 *
+	 * @return array
+	 */
+	public function files_bulk_search_and_replace( $list_items ) {
+		$results = [];
+		foreach ( $list_items as $list_item ) {
+			$results[] = $this->do_search_and_replace( $list_item['file_name'], $list_item['search_items'] );
+		}
+
+		return $results;
+	}
+
+
 	/**
 	 * Search and replace method
 	 *
