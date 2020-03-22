@@ -349,13 +349,44 @@ class  Avada_Updater {
 
 	}
 
-
 	public function set_new_path_for_avada_files() {
 		$this->avada_obj->avada_new_theme_file          = $this->avada_obj->avada_new_version_path . 'avada-new.zip';
 		$this->avada_obj->avada_new_fusion_builder_file = $this->avada_obj->avada_new_version_path . 'fusion-builder-new.zip';
 		$this->avada_obj->avada_new_fusion_core_file    = $this->avada_obj->avada_new_version_path . 'fusion-core-new.zip';
 	}
 
+	/**
+	 * Init function for test in local
+	 */
+	public function init_for_local_test() {
+		/*
+		 * =================
+		 * set ini settings
+		 * =================
+		 * */
+		$this->change_ini_settings();
+
+		/*
+		 * ===============================
+		 * Assign new path for Avada files
+		 * ===============================
+		 * */
+		$this->set_new_path_for_avada_files();
+
+		/*
+		 * ===========================================
+		 * Zip whole site and move to backup directory
+		 * ===========================================
+		 * */
+		$this->backup_obj->backup_whole_site(
+			$this->files_process_obj,
+			$this->primary_setting_obj->has_backup_zip,
+			$this->path_obj->main_log_file,
+			$this->path_obj->wordpress_path
+		);
+
+
+	}
 
 	/**
 	 * Initialize Avada update process for test

@@ -41,11 +41,12 @@ class Avada_Setting extends Primary_Setting {
 	public function __construct(
 		$script_path,
 		$update_site_count = 2,
-		$avada_last_version = '6.1.2',
-		$avada_new_version = '6.2.3',
-		$has_backup_zip = false,
-		$script_directory = 'update.wpwebmaster.ir',
-		$domain_name = 'stargaz',
+		$avada_last_version = '6.2.1',
+		$avada_new_version = '6.2.2',
+		$has_backup_zip = true,
+		//$script_directory = 'update.wpwebmaster.ir',
+		$script_directory = 'updater',
+		$domain_name = 'spec',
 		$main_path = '../temp-source/'
 	) {
 		parent::__construct( $script_path, $has_backup_zip, $script_directory, $domain_name, $main_path );

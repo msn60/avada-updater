@@ -28,19 +28,26 @@ use Updater\Inc\Functions\Files_Process;
  * @property  string $backup_zip_file_path
  */
 class Files_Backup {
-
+	use Utility;
 	private $whole_site_backup_path;
 	private $backup_zip_file_name;
 	private $backup_zip_file_path;
 
-	public function __construct( $main_path, $host_name, $host_path, $has_file_backup ) {
+	public function __construct( $main_path, $host_name, $host_path, $has_file_backup, $script_directory ) {
+		/**
+		 * set time zone
+		 */
+		$this->set_time_zone( 'Asia/Tehran' );
 		$this->whole_site_backup_path = $main_path . '05-whole-site-backup/';
 		if ( $has_file_backup === false ) {
 			$this->backup_zip_file_name = $host_name . '-files-backup-' . date( 'Ymd-Hi' ) . '.zip';
 		} else {
 			$this->backup_zip_file_name = $host_name . '-files-backup-' . date( 'Ymd' ) . '.zip';
 		}
-		$this->backup_zip_file_path = '../' . $host_path . $this->backup_zip_file_name;
+		$temp_script_path           = dirname( __FILE__ );
+		$temp_str_for_search        = $script_directory . '\inc\functions';
+		$temp_script_path           = str_replace( $temp_str_for_search, '', $temp_script_path );
+		$this->backup_zip_file_path = $temp_script_path . $host_path . $this->backup_zip_file_name;
 
 	}
 

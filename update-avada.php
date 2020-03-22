@@ -41,7 +41,8 @@ $backup_obj          = new Files_Backup(
 	$path_obj->main_path,
 	$path_obj->host_name,
 	$path_obj->host_path,
-	$primary_setting_obj->has_backup_zip
+	$primary_setting_obj->has_backup_zip,
+	$primary_setting_obj->script_directory
 );
 $updraft_obj         = new Updraft(
 	$path_obj->main_path,
@@ -73,6 +74,7 @@ $updater_obj         = new Avada_Updater(
  *
  */
 
+//$updater_obj->init_for_local_test();
 $updater_obj->init();
 
 unset($updater_obj);

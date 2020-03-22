@@ -64,7 +64,7 @@ trait Host_config {
 			case 'wpwebmaster':
 				$host_name        = 'wpwebmaster';
 				$host_path        = 'public_html/';
-				$is_check_updraft = true;
+				$is_check_updraft = false;
 				break;
 			case 'firstsite.com':
 				$host_name        = 'firstsite';
