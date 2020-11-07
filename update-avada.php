@@ -75,8 +75,8 @@ $updater_obj         = new Avada_Updater(
  *
  */
 
-//$updater_obj->init_for_local_test();
-$updater_obj->init();
+$updater_obj->init_for_local_test();
+//$updater_obj->init();
 
 unset( $updater_obj );
 unset( $files_process_obj );

@@ -378,13 +378,14 @@ class  Avada_Updater {
 		 * Zip whole site and move to backup directory
 		 * ===========================================
 		 * */
-		$this->backup_obj->backup_whole_site(
+		/*$this->backup_obj->backup_whole_site(
 			$this->files_process_obj,
 			$this->primary_setting_obj->has_backup_zip,
 			$this->path_obj->main_log_file,
 			$this->path_obj->wordpress_path
-		);
+		);*/
 
+		var_dump($this);
 
 	}
 

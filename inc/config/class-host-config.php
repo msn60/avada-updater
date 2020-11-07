@@ -29,7 +29,7 @@ trait Host_config {
 			case 'anyl':
 				$host_name        = 'anyl';
 				$host_path        = 'anyl.wpwebmaster.ir/';
-				$is_check_updraft = true;
+				$is_check_updraft = false;
 				break;
 			case 'moblmart':
 				$host_name        = 'moblmart';
@@ -58,8 +58,13 @@ trait Host_config {
 				break;
 			case 'jesmoravan':
 				$host_name        = 'jesmoravan';
-				$host_path        = 'jesmoravan.com/';
-				$is_check_updraft = true;
+				$host_path        = 'jesmoravan.ir/';
+				$is_check_updraft = false;
+				break;
+			case 'decorsar':
+				$host_name        = 'decorsar';
+				$host_path        = 'decorsar.ir/';
+				$is_check_updraft = false;
 				break;
 			case 'wpwebmaster':
 				$host_name        = 'wpwebmaster';
