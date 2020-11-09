@@ -11,10 +11,10 @@
  * @since      1.0.0
  */
 
-namespace Updater\Inc\Core;
+namespace Updater\Core;
 
-use Updater\Inc\Functions\Files_Process;
-use Updater\Inc\Functions\Path;
+use Updater\Functions\FilesProcess;
+use Updater\Functions\Path;
 
 /**
  * Class Avada
@@ -145,12 +145,12 @@ class Avada {
 	/**
 	 * Move old avada files and change them with new files
 	 *
-	 * @param Files_Process $files_process_obj
+	 * @param FilesProcess $files_process_obj
 	 * @param string        $main_log_file
 	 * @param int           $update_site_count
 	 */
 	public function transfer_avada_new_files(
-		Files_Process $files_process_obj,
+		FilesProcess $files_process_obj,
 		$main_log_file,
 		$update_site_count
 	) {
@@ -186,7 +186,7 @@ class Avada {
 	 * backup from mo & po language files from fusion core and fusion builder
 	 */
 	public function backup_language_files(
-		Files_Process $files_process_obj,
+		FilesProcess $files_process_obj,
 		$main_log_file
 	) {
 		/*
@@ -221,11 +221,11 @@ class Avada {
 	/**
 	 * Archive current version of Avada theme, fusion builder and core
 	 *
-	 * @param Files_Process $files_process_obj
+	 * @param FilesProcess $files_process_obj
 	 * @param string        $main_log_file
 	 */
 	public function archive_avada_last_version_files(
-		Files_Process $files_process_obj,
+		FilesProcess $files_process_obj,
 		$main_log_file
 	) {
 		// TODO: Check that copy_list_items exist
@@ -259,12 +259,12 @@ class Avada {
 	/**
 	 * Unzipped Avada theme & fusion core & fusion builder
 	 *
-	 * @param Files_Process $files_process_obj
+	 * @param FilesProcess $files_process_obj
 	 * @param Path          $path_obj
 	 * @param string        $main_log_file
 	 */
 	public function unzip_avada_last_version_files(
-		Files_Process $files_process_obj,
+		FilesProcess $files_process_obj,
 		Path $path_obj,
 		$main_log_file
 	) {
@@ -304,11 +304,11 @@ class Avada {
 	/**
 	 * Move lang file to related original directories
 	 *
-	 * @param Files_Process $files_process_obj
+	 * @param FilesProcess $files_process_obj
 	 * @param string        $main_log_file
 	 */
 	public function move_lang_files(
-		Files_Process $files_process_obj,
+		FilesProcess $files_process_obj,
 		$main_log_file
 	) {
 		$lang_list_items = [
@@ -342,11 +342,11 @@ class Avada {
 	/**
 	 * copy new avada.pot file in child theme
 	 *
-	 * @param Files_Process $files_process_obj
+	 * @param FilesProcess $files_process_obj
 	 * @param string        $main_log_file
 	 */
 	public function copy_new_avada_pot(
-		Files_Process $files_process_obj,
+		FilesProcess $files_process_obj,
 		$main_log_file
 	) {
 		$remove_pot_file_result = $files_process_obj->remove_file( $this->avada_child_theme_lang_pot_file_path );

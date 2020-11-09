@@ -12,7 +12,7 @@
  * @since      1.0.0
  */
 
-namespace Updater\Inc;
+namespace Updater;
 
 /**
  * Class Autoloader
@@ -23,7 +23,7 @@ namespace Updater\Inc;
  * @package    UpdaterInc
  * @author     Mehdi Soltani <soltani.n.mehdi@gmail.com>
  */
-class Msn_Autoloader {
+class MsnAutoloader {
 
 	protected $name_space = 'Updater';
 

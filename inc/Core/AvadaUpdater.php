@@ -11,24 +11,24 @@
  * @since      1.0.0
  */
 
-namespace Updater\Inc\Core;
+namespace Updater\Core;
 
 
-use Updater\Inc\Core\{
+use Updater\Core\{
 	Avada, Updraft
 };
-use Updater\Inc\Functions\{
-	Files_Backup, Utility, Path, Files_Process
+use Updater\Functions\{
+	FilesBackup, Utility, Path, FilesProcess
 };
-use Updater\Inc\Config\{
-	Primary_Setting, Avada_Setting
+use Updater\Config\{
+	PrimarySettings, AvadaSetting
 };
 
-class  Avada_Updater {
+class  AvadaUpdater {
 	use Utility;
 	public $script_path;
 	/**
-	 * @var Avada_Setting class an object for primary settings
+	 * @var AvadaSetting class an object for primary settings
 	 */
 	public $primary_setting_obj;
 	/**
@@ -40,7 +40,7 @@ class  Avada_Updater {
 	 */
 	public $avada_obj;
 	/**
-	 * @var Files_Backup class an object to define file backup settings and methods in script
+	 * @var FilesBackup class an object to define file backup settings and methods in script
 	 */
 	public $backup_obj;
 	/**
@@ -48,9 +48,9 @@ class  Avada_Updater {
 	 */
 	public $updraft_obj;
 	/**
-	 * @var Files_Process class an object to process on a file
+	 * @var FilesProcess class an object to process on a file
 	 */
-	public $files_process_obj;
+	public $FilesProcess_obj;
 	public $htaccess_lite_speed_config;
 	public $critical_files;
 	public $important_directories;
@@ -58,12 +58,12 @@ class  Avada_Updater {
 	public function __construct(
 		string $primary_script_path,
 		string $htaccess_lite_speed_config,
-		Avada_Setting $primary_setting_obj,
+		AvadaSetting $primary_setting_obj,
 		Path $path_obj,
 		Avada $avada_obj,
-		Files_Backup $backup_obj,
+		FilesBackup $backup_obj,
 		Updraft $updraft_obj,
-		Files_Process $files_process_obj
+		FilesProcess $FilesProcess_obj
 
 	) {
 		/**
@@ -79,7 +79,7 @@ class  Avada_Updater {
 		$this->avada_obj                  = $avada_obj;
 		$this->backup_obj                 = $backup_obj;
 		$this->updraft_obj                = $updraft_obj;
-		$this->files_process_obj          = $files_process_obj;
+		$this->FilesProcess_obj          = $FilesProcess_obj;
 		$this->htaccess_lite_speed_config = $htaccess_lite_speed_config;
 		/*
 		 * critical files
@@ -187,7 +187,7 @@ class  Avada_Updater {
 		 * =====================================================
 		 * */
 		$this->avada_obj->transfer_avada_new_files(
-			$this->files_process_obj,
+			$this->FilesProcess_obj,
 			$this->path_obj->main_log_file,
 			$this->primary_setting_obj->update_site_count
 		);
@@ -204,7 +204,7 @@ class  Avada_Updater {
 		 * */
 		if ( $this->updraft_obj->is_check_updraft ) {
 			$this->updraft_obj->move_updraft_extra_files(
-				$this->files_process_obj,
+				$this->FilesProcess_obj,
 				$this->path_obj->main_log_file
 			);
 		}
@@ -214,7 +214,7 @@ class  Avada_Updater {
 		 * ===========================================
 		 * */
 		$this->backup_obj->backup_whole_site(
-			$this->files_process_obj,
+			$this->FilesProcess_obj,
 			$this->primary_setting_obj->has_backup_zip,
 			$this->path_obj->main_log_file,
 			$this->path_obj->wordpress_path
@@ -225,7 +225,7 @@ class  Avada_Updater {
 		 * ===========================
 		 * */
 		$this->avada_obj->backup_language_files(
-			$this->files_process_obj,
+			$this->FilesProcess_obj,
 			$this->path_obj->main_log_file
 		);
 
@@ -236,7 +236,7 @@ class  Avada_Updater {
 		 * ===================================================================
 		 * */
 		$this->avada_obj->archive_avada_last_version_files(
-			$this->files_process_obj,
+			$this->FilesProcess_obj,
 			$this->path_obj->main_log_file
 		);
 
@@ -246,7 +246,7 @@ class  Avada_Updater {
 		 * ===================================================
 		 * */
 		$this->avada_obj->unzip_avada_last_version_files(
-			$this->files_process_obj,
+			$this->FilesProcess_obj,
 			$this->path_obj,
 			$this->path_obj->main_log_file
 		);
@@ -257,7 +257,7 @@ class  Avada_Updater {
 		 * ===============================================
 		 * */
 		$this->avada_obj->move_lang_files(
-			$this->files_process_obj,
+			$this->FilesProcess_obj,
 			$this->path_obj->main_log_file
 		);
 
@@ -267,7 +267,7 @@ class  Avada_Updater {
 		 * =======================================
 		 * */
 		$this->avada_obj->copy_new_avada_pot(
-			$this->files_process_obj,
+			$this->FilesProcess_obj,
 			$this->path_obj->main_log_file
 		);
 
@@ -279,7 +279,7 @@ class  Avada_Updater {
 		 * */
 		if ( $this->updraft_obj->is_check_updraft ) {
 			$this->updraft_obj->move_updraft_extra_files(
-				$this->files_process_obj,
+				$this->FilesProcess_obj,
 				$this->path_obj->main_log_file,
 				'move-to-wp-directory'
 			);
@@ -291,13 +291,13 @@ class  Avada_Updater {
 	public function htaccess_litespeed_check() {
 
 		if ( 'litespeed' === $this->check_server_type() ) {
-			$msn_writing_message = $this->files_process_obj->check_prepend_htaccess_for_litespeed( $this->htaccess_lite_speed_config,
+			$msn_writing_message = $this->FilesProcess_obj->check_prepend_htaccess_for_litespeed( $this->htaccess_lite_speed_config,
 				$this->path_obj->htaccess_file_path );
 		} else {
 			$msn_writing_message = 'It is not LiteSpeed Server. So nothing write on htaccess file. Date is : ' . date( 'Y-m-d  H:i:s' ) . '.';
 		}
-		$this->files_process_obj->append( $msn_writing_message, $this->path_obj->main_log_file );
-		$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file );
+		$this->FilesProcess_obj->append( $msn_writing_message, $this->path_obj->main_log_file );
+		$this->FilesProcess_obj->append_section_separator( $this->path_obj->main_log_file );
 
 
 	}
@@ -330,8 +330,8 @@ class  Avada_Updater {
 					break;
 			}
 
-			$this->files_process_obj->append( $error_message, $this->path_obj->main_log_file );
-			$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file );
+			$this->FilesProcess_obj->append( $error_message, $this->path_obj->main_log_file );
+			$this->FilesProcess_obj->append_section_separator( $this->path_obj->main_log_file );
 			die( '<h2>You can not continue!!!</h2>' );
 		}
 
@@ -339,13 +339,13 @@ class  Avada_Updater {
 
 	public function check_important_directory_exist( $important_directories ) {
 		foreach ( $important_directories as $important_directory ) {
-			$temp_result = $this->files_process_obj->make_directory_if_not_exist( $important_directory ['path'], $important_directory ['type'] );
+			$temp_result = $this->FilesProcess_obj->make_directory_if_not_exist( $important_directory ['path'], $important_directory ['type'] );
 			if ( 'successful' === $temp_result['type'] ) {
-				$this->files_process_obj->append( $temp_result['message'], $this->path_obj->main_log_file );
+				$this->FilesProcess_obj->append( $temp_result['message'], $this->path_obj->main_log_file );
 			}
 		}
-		$this->files_process_obj->append( 'End of checking to be existing important directories', $this->path_obj->main_log_file );
-		$this->files_process_obj->append_section_separator( $this->path_obj->main_log_file );
+		$this->FilesProcess_obj->append( 'End of checking to be existing important directories', $this->path_obj->main_log_file );
+		$this->FilesProcess_obj->append_section_separator( $this->path_obj->main_log_file );
 
 	}
 
@@ -379,7 +379,7 @@ class  Avada_Updater {
 		 * ===========================================
 		 * */
 		/*$this->backup_obj->backup_whole_site(
-			$this->files_process_obj,
+			$this->FilesProcess_obj,
 			$this->primary_setting_obj->has_backup_zip,
 			$this->path_obj->main_log_file,
 			$this->path_obj->wordpress_path

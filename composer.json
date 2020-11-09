@@ -1,9 +1,9 @@
 {
-    "autoload": {
-        "psr-4" : {
-            "Updater\\" : "inc/"
-        }
-    },
-    "require": {
-    }
+ "autoload": {
+  "psr-4": {
+   "Updater\\": "inc/"
+  }
+ },
+ "require": {
+ }
 }

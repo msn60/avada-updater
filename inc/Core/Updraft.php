@@ -11,11 +11,11 @@
  * @since      1.0.1
  */
 
-namespace Updater\Inc\Core;
+namespace Updater\Core;
 
-use Updater\Inc\Config\Host_config;
-use Updater\Inc\Functions\Files_Process;
-use Updater\Inc\Functions\Path;
+use Updater\Config\HostConfig;
+use Updater\Functions\FilesProcess;
+use Updater\Functions\Path;
 
 
 /**
@@ -33,7 +33,7 @@ use Updater\Inc\Functions\Path;
  */
 class Updraft {
 
-	use Host_config;
+	use HostConfig;
 
 	/**
 	 * Points to updraft path in your WordPress site
@@ -94,7 +94,7 @@ class Updraft {
 	 * @param string $type
 	 */
 	public function move_updraft_extra_files(
-		Files_Process $file_process_obj,
+		FilesProcess $file_process_obj,
 		string $main_log_file,
 		string $type = 'move-to-temp'
 	) {

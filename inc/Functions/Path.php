@@ -11,10 +11,10 @@
  * @since      1.0.0
  */
 
-namespace Updater\Inc\Functions;
+namespace Updater\Functions;
 
-use Updater\Inc\Config\Host_config;
-use Updater\Inc\Config\Primary_Setting;
+use Updater\Config\HostConfig;
+use Updater\Config\PrimarySettings;
 
 
 /**
@@ -41,7 +41,7 @@ use Updater\Inc\Config\Primary_Setting;
  */
 class Path {
 
-	use Host_config;
+	use HostConfig;
 	private $script_directory;
 	private $script_path;
 	private $domain_name;
@@ -60,7 +60,7 @@ class Path {
 	private $wordpress_htaccess_file_path;
 
 	public function __construct(
-		Primary_Setting $primary_setting_obj
+		PrimarySettings $primary_setting_obj
 	) {
 		$this->script_directory = $primary_setting_obj->script_directory;
 		$this->script_path      = $primary_setting_obj->script_path;

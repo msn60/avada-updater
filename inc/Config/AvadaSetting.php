@@ -11,9 +11,9 @@
  * @since      1.0.1
  */
 
-namespace Updater\Inc\Config;
+namespace Updater\Config;
 
-use Updater\Inc\Config\Primary_Setting;
+use Updater\Config\PrimarySettings;
 
 
 /**
@@ -29,7 +29,7 @@ use Updater\Inc\Config\Primary_Setting;
  * @property int    $update_site_count
  * @property string $avada_last_version
  */
-class Avada_Setting extends Primary_Setting {
+class AvadaSetting extends PrimarySettings {
 
 	#put count of update site here:
 	protected $update_site_count;

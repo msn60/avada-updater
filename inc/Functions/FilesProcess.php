@@ -11,7 +11,7 @@
  * @since      1.0.0
  */
 
-namespace Updater\Inc\Functions;
+namespace Updater\Functions;
 
 
 /**
@@ -22,7 +22,7 @@ namespace Updater\Inc\Functions;
  * @package    Updater\Inc\Functions
  * @author     Mehdi Soltani <soltani.n.mehdi@gmail.com>
  */
-class Files_Process {
+class FilesProcess {
 	use Utility;
 
 	/**

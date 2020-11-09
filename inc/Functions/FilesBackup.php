@@ -11,9 +11,9 @@
  * @since      1.0.0
  */
 
-namespace Updater\Inc\Functions;
+namespace Updater\Functions;
 
-use Updater\Inc\Functions\Files_Process;
+use Updater\Functions\FilesProcess;
 
 
 /**
@@ -27,7 +27,7 @@ use Updater\Inc\Functions\Files_Process;
  * @property  string $backup_zip_file_name
  * @property  string $backup_zip_file_path
  */
-class Files_Backup {
+class FilesBackup {
 	use Utility;
 	private $whole_site_backup_path;
 	private $backup_zip_file_name;
@@ -70,13 +70,13 @@ class Files_Backup {
 	/**
 	 * Method to get whole site backup in zipped archive file
 	 *
-	 * @param Files_Process $files_process_obj
+	 * @param FilesProcess $files_process_obj
 	 * @param boolean       $has_backup_zip
 	 * @param string        $log_file
 	 * @param string        $wordpress_path
 	 */
 	public function backup_whole_site(
-		Files_Process $files_process_obj,
+		FilesProcess $files_process_obj,
 		$has_backup_zip,
 		$log_file,
 		$wordpress_path

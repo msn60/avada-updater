@@ -10,7 +10,6 @@ include_once 'template/header/header-section.php';
 
 
 <br><br><br>
-<hr>
 <br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br>
 <?php

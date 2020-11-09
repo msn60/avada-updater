@@ -12,7 +12,7 @@
  * @since      1.0.0
  */
 
-namespace Updater\Inc\Functions;
+namespace Updater\Functions;
 
 
 /**

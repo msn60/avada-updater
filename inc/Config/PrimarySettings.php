@@ -11,7 +11,7 @@
  * @since      1.0.1
  */
 
-namespace Updater\Inc\Config;
+namespace Updater\Config;
 
 
 /**
@@ -27,7 +27,7 @@ namespace Updater\Inc\Config;
  * @property string  $domain_name
  * @property string  $main_path Define paths and files for updater script
  */
-class Primary_Setting {
+class PrimarySettings {
 
 
 	protected $script_path;

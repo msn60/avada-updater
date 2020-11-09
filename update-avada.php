@@ -3,14 +3,14 @@
 namespace Updater;
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Updater\Inc\Core\{
-	Avada, Avada_Updater, Updraft
+use Updater\Core\{
+	Avada, AvadaUpdater, Updraft
 };
-use Updater\Inc\Functions\{
-	Files_Backup, Utility, Path, Files_Process
+use Updater\Functions\{
+	FilesBackup, Utility, Path, FilesProcess
 };
-use Updater\Inc\Config\{
-	Primary_Setting, Avada_Setting
+use Updater\Config\{
+	PrimarySettings, AvadaSetting
 };
 
 
@@ -27,7 +27,7 @@ RewriteRule .* - [E=noconntimeout:1]
 </IfModule>
 HTACCESS;
 
-$primary_setting_obj = new Avada_Setting( $primary_script_path );
+$primary_setting_obj = new AvadaSetting( $primary_script_path );
 $path_obj            = new Path( $primary_setting_obj );
 $avada_obj           = new Avada(
 	$path_obj->main_path,
@@ -37,7 +37,7 @@ $avada_obj           = new Avada(
 	$path_obj->host_name,
 	$path_obj->main_theme_path
 );
-$backup_obj          = new Files_Backup(
+$backup_obj          = new FilesBackup(
 	$path_obj->main_path,
 	$path_obj->host_name,
 	$path_obj->host_path,
@@ -50,8 +50,8 @@ $updraft_obj         = new Updraft(
 	$path_obj->host_path,
 	$primary_setting_obj->domain_name
 );
-$files_process_obj   = new Files_Process();
-$updater_obj         = new Avada_Updater(
+$files_process_obj   = new FilesProcess();
+$updater_obj         = new AvadaUpdater(
 	$primary_script_path,
 	$htaccess_lite_speed_config,
 	$primary_setting_obj,

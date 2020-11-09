@@ -11,7 +11,7 @@
  * @since      1.0.1
  */
 
-namespace Updater\Inc\Config;
+namespace Updater\Config;
 
 
 /**
@@ -22,7 +22,7 @@ namespace Updater\Inc\Config;
  * @package    Updater\Inc\Config
  * @author     Mehdi Soltani <soltani.n.mehdi@gmail.com>
  */
-trait Host_config {
+trait HostConfig {
 
 	function set_host_config( $domain_name ) {
 		switch ( $domain_name ) {
