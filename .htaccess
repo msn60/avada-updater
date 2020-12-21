@@ -4,3 +4,8 @@ RewriteRule .* - [E=noabort:1]
 RewriteRule .* - [E=noconntimeout:1]
 </IfModule>
 
+RewriteEngine on
+# force ssl
+RewriteCond     %{SERVER_PORT} ^80$
+RewriteRule     ^(.*)$ https://%{SERVER_NAME}%{REQUEST_URI} [L,R]
+

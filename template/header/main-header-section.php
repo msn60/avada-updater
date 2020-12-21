@@ -1,5 +1,6 @@
-
-
+<?php
+use Updater\Config\Constant;
+?>
 <div class="wpwebmaster-header-main-1">
     <div class="container-md container-fluid">
         <nav class="navbar navbar-expand-lg navbar-light ">
@@ -12,7 +13,7 @@
 		                </a>
 		                <div class="dropdown-menu" aria-labelledby="navbarDropdownAvada">
 			                <a class="dropdown-item" href="#">آپدیت قالب</a>
-			                <a class="dropdown-item" href="/add-host.php">اضافه کردن هاست</a>
+			                <a class="dropdown-item" href="/template/main-pages/add-host-page.php">اضافه کردن هاست</a>
 		                </div>
                     </li>
                     <li class="nav-item dropdown m-lg-3 m-1">
@@ -30,7 +31,7 @@
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
-                <img src="assets/images/wpwebmaster-logo-300px.png" alt="wpwebmaster logo" loading="lazy">
+                <img src="<?php echo Constant::UPDATER_PUBLIC_IMAGES_URL?>wpwebmaster-logo-300px.png" alt="wpwebmaster logo" loading="lazy">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerMainHeader"
                     aria-controls="navbarTogglerMainHeader" aria-expanded="false" aria-label="Toggle navigation">
