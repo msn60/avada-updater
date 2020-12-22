@@ -31,7 +31,7 @@ use Updater\Config\Constant;
                 </ul>
             </div>
             <a class="navbar-brand" href="#">
-                <img src="<?php echo Constant::UPDATER_PUBLIC_IMAGES_URL?>wpwebmaster-logo-300px.png" alt="wpwebmaster logo" loading="lazy">
+                <img src="<?php echo Constant::PUBLIC_IMAGES_URL?>wpwebmaster-logo-300px.png" alt="wpwebmaster logo" loading="lazy">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerMainHeader"
                     aria-controls="navbarTogglerMainHeader" aria-expanded="false" aria-label="Toggle navigation">

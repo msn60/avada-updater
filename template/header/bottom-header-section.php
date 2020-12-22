@@ -27,7 +27,7 @@ use Updater\Config\Constant;
 			</div>
 			<div class="col-sm-4">
 				<a href="" class="d-flex justify-content-center align-items-center h-100">
-					<img src="<?php echo Constant::UPDATER_PUBLIC_IMAGES_URL?>wpwebmaster-logo-300px.png" alt="wpwebmaster logo" class="mw-100">
+					<img src="<?php echo Constant::PUBLIC_IMAGES_URL?>wpwebmaster-logo-300px.png" alt="wpwebmaster logo" class="mw-100">
 				</a>
 			</div>
 			<nav>

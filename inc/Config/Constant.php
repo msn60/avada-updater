@@ -25,18 +25,23 @@ class Constant {
 	/*
 	 * Define all path constants
 	 * */
-	const UPDATER_TEMPLATE_PATH = SITE_ROOT_PATH  . 'template' . DIRECTORY_SEPARATOR;
-	const UPDATER_INC_PATH = SITE_ROOT_PATH  . 'inc' . DIRECTORY_SEPARATOR;
-
+	const TEMPLATE_PATH = SITE_ROOT_PATH . 'template' . DIRECTORY_SEPARATOR;
+	const INC_PATH = SITE_ROOT_PATH . 'inc' . DIRECTORY_SEPARATOR;
 	/*
 	 * Define all url constants
 	 * */
-	const UPDATER_PUBLIC_ASSETS_URL = SITE_ROOT_URL  . 'assets/';
-	const UPDATER_PUBLIC_CSS_URL = self::UPDATER_PUBLIC_ASSETS_URL  . 'css/';
-	const UPDATER_PUBLIC_JS_URL = self::UPDATER_PUBLIC_ASSETS_URL  . 'js/';
-	const UPDATER_PUBLIC_IMAGES_URL = self::UPDATER_PUBLIC_ASSETS_URL  . 'images/';
-	const UPDATER_FONTS_IMAGES_URL = self::UPDATER_PUBLIC_ASSETS_URL  . 'fonts/';
-
+	const PUBLIC_ASSETS_URL = SITE_ROOT_URL . 'assets/';
+	const PUBLIC_CSS_URL = self::PUBLIC_ASSETS_URL . 'css/';
+	const PUBLIC_JS_URL = self::PUBLIC_ASSETS_URL . 'js/';
+	const PUBLIC_IMAGES_URL = self::PUBLIC_ASSETS_URL . 'images/';
+	const FONTS_URL = self::PUBLIC_ASSETS_URL . 'fonts/';
+	/*
+	 * Define Database connections
+	 * */
+	const DB_SERVER = 'localhost';
+	const DB_USER = 'mehdi';
+	const DB_PASS = 'mznx9182';
+	const DB_NAME = 'helper_db';
 }
 
 
