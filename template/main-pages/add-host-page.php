@@ -3,6 +3,15 @@
 require_once '../main-init.php';
 use Updater\Functions\UsableFunctions;
 use Updater\Config\Constant;
+use Updater\Database\DatabaseFunctions;
+
+$database = DatabaseFunctions::connect_to_database(
+	Constant::DB_SERVER,
+	Constant::DB_USER,
+	Constant::DB_PASS,
+	Constant::DB_NAME
+);
+
 
 include_once Constant::TEMPLATE_PATH . 'header/head-section.php';
 include_once Constant::TEMPLATE_PATH . 'header/header-section.php';
