@@ -4,6 +4,9 @@ require_once '../main-init.php';
 use Updater\Functions\UsableFunctions;
 use Updater\Config\Constant;
 use Updater\Database\DatabaseFunctions;
+use Updater\Functions\RequestFunctions;
+$request_object = new RequestFunctions();
+
 
 $database = DatabaseFunctions::connect_to_database(
 	Constant::DB_SERVER,

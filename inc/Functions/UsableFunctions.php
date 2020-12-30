@@ -55,10 +55,6 @@ class UsableFunctions {
 		return rtrim( $string, '/\\' );
 	}
 
-	public static function test(  ) {
-		var_dump('hello my gholam');
-	}
-
 }
 
 
