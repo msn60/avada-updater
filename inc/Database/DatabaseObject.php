@@ -33,7 +33,7 @@ class DatabaseObject {
 	/**
 	 * @var array $columns
 	 */
-	static protected $columns = [];
+	static protected $db_columns = [];
 	/**
 	 * @var array $errors
 	 */
@@ -72,12 +72,140 @@ class DatabaseObject {
 
 	/**
 	 * Return all records from a table
+	 *
 	 * @return array
 	 */
 	public static function find_all() {
 		$sql = "SELECT * FROM " . static::$table_name;
 
 		return static::find_by_sql( $sql );
+	}
+
+	/**
+	 * Method to find a record by id
+	 *
+	 * @param $id
+	 *
+	 * @return bool|mixed
+	 */
+	public static function find_by_id( $id ) {
+		$sql          = "SELECT * FROM " . static::$table_name . " ";
+		$sql          .= "WHERE id='" . self::$database->escape_string( $id ) . "'";
+		$object_array = static::find_by_sql( $sql );
+		if ( ! empty( $object_array ) ) {
+			return array_shift( $object_array );
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Method to instantiate an object by passing an associative record
+	 *
+	 * @param array $record
+	 *
+	 * @return object
+	 */
+	public static function instantiate( $record ) {
+		$object = new static;
+		// Could manually assign values to properties
+		// but automatically assignment is easier and re-usable
+		foreach ( $record as $property => $value ) {
+			if ( property_exists( $object, $property ) ) {
+				$object->$property = $value;
+			}
+		}
+
+		return $object;
+	}
+
+	/**
+	 * Properties which have database columns except id
+	 *
+	 * @return array
+	 */
+	public function attributes() {
+		$attributes = [];
+		foreach ( static::$db_columns as $column ) {
+			if ( 'id' == $column ) {
+				continue;
+			}
+			$attributes[ $column ] = $this->$column;
+		}
+
+		return $attributes;
+	}
+
+	/**
+	 * Method to sanitize attributes value
+	 *
+	 * @return array
+	 */
+	protected function sanitize_attributes() {
+		$sanitized = [];
+		foreach ( $this->attributes() as $key => $value ) {
+			$sanitized[ $key ] = self::$database->escape_string( $value );
+		}
+
+		return $sanitized;
+	}
+
+	public function merge_attributes( $args = [] ) {
+		foreach ( $args as $key => $value ) {
+			if ( property_exists( $this, $key ) && ! is_null( $value ) ) {
+				$this->$key = $value;
+			}
+		}
+	}
+
+	/**
+	 * Method to add custom validation
+	 *
+	 * @return array
+	 */
+	protected function validate() {
+		$this->errors = [];
+		// Add custom validations here
+		// You can override it in child class
+		return $this->errors;
+	}
+
+	/**
+	 * Method to create a record in database
+	 * @return bool|\mysqli_result
+	 */
+	protected function create() {
+		$this->validate();
+		if ( ! empty( $this->errors ) ) {
+			return false;
+		}
+		$attributes = $this->sanitize_attributes();
+
+		$sql        = "INSERT INTO " . static::$table_name . " ( ";
+		$sql        .= join( ', ', array_keys( $attributes ) );
+		$sql        .= " ) VALUES ('";
+		$sql        .= join( "', '", array_values( $attributes ) );
+		$sql        .= "')";
+
+		$result     = self::$database->query( $sql );
+		if ( $result ) {
+			$this->id = self::$database->insert_id;
+		}
+
+		return $result;
+	}
+
+	protected function update() {
+		return false;
+	}
+
+
+	public function save(  ) {
+		if(isset($this->id)) {
+			return $this->update();
+		} else {
+			return $this->create();
+		}
 	}
 }
 
