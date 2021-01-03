@@ -49,7 +49,7 @@ class Host extends DatabaseObject {
 
 		$this->host_name        = $this->sanitize_with_trim($args['host_name']) ?? '';
 		$this->host_path        = $this->sanitize_with_trim($args['host_path']) ?? '';
-		$this->is_check_updraft = isset($args['is_check_updraft']) ? true : false;
+		$this->is_check_updraft = isset($args['is_check_updraft']) ? 1 : 0;
 
 		/*
 		 //Caution: allows private/protected properties to be set

@@ -13,7 +13,8 @@ use Updater\Config\Constant;
 		                </a>
 		                <div class="dropdown-menu" aria-labelledby="navbarDropdownAvada">
 			                <a class="dropdown-item" href="#">آپدیت قالب</a>
-			                <a class="dropdown-item" href="/template/main-pages/add-host-page.php">اضافه کردن هاست</a>
+			                <a class="dropdown-item" href="/template/main-pages/host-add-page.php">اضافه کردن هاست</a>
+                      <a class="dropdown-item" href="/template/main-pages/host-all-records-page.php">نمایش همه هاست ها</a>
 		                </div>
                     </li>
                     <li class="nav-item dropdown m-lg-3 m-1">

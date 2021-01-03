@@ -8,7 +8,15 @@ use Updater\Config\Constant;
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=6.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>MSN Toolkit</title>
+    <title>
+      <?php
+        if ( !empty($page_title) && !is_null($page_title)) {
+          echo $page_title;
+        } else {
+          echo 'MSN Toolkit';
+        }
+      ?>
+    </title>
     <link rel="preload" as="style" href="<?php echo Constant::PUBLIC_CSS_URL?>bootstrap-reboot-rtl.css"
           onload="this.onload=null;this.rel='stylesheet'">
     <noscript>

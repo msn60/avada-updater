@@ -18,7 +18,7 @@ $database = DatabaseFunctions::connect_to_database(
 );
 DatabaseObject::set_database($database);
 
-
+$page_title = 'اضافه کردن هاست';
 include_once Constant::TEMPLATE_PATH . 'header/head-section.php';
 include_once Constant::TEMPLATE_PATH . 'header/header-section.php';
 
@@ -27,23 +27,37 @@ if ( $request_object->is_post_request() && isset($_POST) && ! empty($_POST)) {
 	$args = $_POST['host'];
 	$new_host = new Host( $args);
 	$host_creation_result = $new_host->save();
-	if ($host_creation_result === true ) {
-		echo '<h2>به مولا غلام</h2>';
-	} else {
-		echo '<h2>به چخ رفت غلام</h2>';
-	}
+?>
+<hr>
+<section class="mt-2">
+  <div class="container  mt-2">
+    <div class="row">
+      <div class="col-md-8 bg-white  msn-shadow-light rounded-lg p-4 mx-auto ">
+				<?php if ( $host_creation_result === true ): ?>
+          <h4 class="mb-3 text-center">مشخصات هاست به درستی ثبت شد</h4>
+          <ul class="p-4">
+            <li>نام هاست:
+							<?php echo $new_host->host_name ?>
+            </li>
+            <li>آدرس هاست:
+							<?php echo $new_host->host_path ?>
+            </li>
+          </ul>
+				<?php else: ?>
+          <h4 class="mb-3 text-center">مشخصات هاست به درستی ثبت نشد</h4>
+          <p>لطفا با مدیر سایت تماس گرفته و مشکل را اعلام نمایید</p>
+				<?php endif; ?>
+      </div>
+    </div>
 
+  </div>
+</section>
+<?php
 
 } else {
 	include_once Constant::TEMPLATE_PATH . 'section/add-host-section.php';
 }
 
-
-?>
-
-
-
-<?php
 include_once Constant::TEMPLATE_PATH . 'footer/main-footer.php';
 
 DatabaseFunctions::disconnect_database( $database );
