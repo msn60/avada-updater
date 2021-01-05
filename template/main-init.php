@@ -1,5 +1,6 @@
 <?php
 namespace Updater;
+ob_start();
 /**
  * Define main site root
  */

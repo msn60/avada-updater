@@ -32,10 +32,10 @@ use Updater\Config\Constant;
     </noscript>
     <link rel="icon" href="<?php echo Constant::PUBLIC_IMAGES_URL?>favicon.ico" type="image/x-icon"/>
     <link rel="preload" href="<?php echo Constant::FONTS_URL ?>Vazir.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" as="script" href="https://code.jquery.com/jquery-3.5.1.slim.min.js">
+    <!--<link rel="preload" as="script" href="https://code.jquery.com/jquery-3.5.1.slim.min.js">-->
     <link rel="preload" as="script" href="<?php echo Constant::PUBLIC_JS_URL?>bootstrap.bundle.js">
     <link rel="preload" as="script" href="<?php echo Constant::PUBLIC_JS_URL?>custom.js">
-    <link rel="preload" as="script" href="https://kit.fontawesome.com/f0c97a4a4d.js">
+    <!--<link rel="preload" as="script" href="https://kit.fontawesome.com/f0c97a4a4d.js">-->
 
 </head>
 <body>

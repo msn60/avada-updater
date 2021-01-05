@@ -35,6 +35,7 @@ class Constant {
 	const PUBLIC_JS_URL = self::PUBLIC_ASSETS_URL . 'js/';
 	const PUBLIC_IMAGES_URL = self::PUBLIC_ASSETS_URL . 'images/';
 	const FONTS_URL = self::PUBLIC_ASSETS_URL . 'fonts/';
+	const TEMPLATE_URL = SITE_ROOT_URL . 'template/';
 	/*
 	 * Define Database connections
 	 * */

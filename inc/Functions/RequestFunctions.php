@@ -61,6 +61,16 @@ class RequestFunctions {
 		return $_SERVER['REQUEST_METHOD'] == 'GET';
 	}
 
+	/**
+	 * @param string $location
+	 */
+	function redirect_to($location) {
+		header("Location: " . $location);
+		exit;
+	}
+
+
+
 
 }
 

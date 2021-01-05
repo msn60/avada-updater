@@ -7,6 +7,7 @@ use Updater\Database\DatabaseObject;
 use Updater\Database\DatabaseFunctions;
 use Updater\Functions\RequestFunctions;
 use Updater\Config\Host;
+use Updater\ViewHandler\PageRender;
 $request_object = new RequestFunctions();
 
 
@@ -19,8 +20,10 @@ $database = DatabaseFunctions::connect_to_database(
 DatabaseObject::set_database($database);
 
 $page_title = 'اضافه کردن هاست';
-include_once Constant::TEMPLATE_PATH . 'header/head-section.php';
-include_once Constant::TEMPLATE_PATH . 'header/header-section.php';
+/*include_once Constant::TEMPLATE_PATH . 'header/head-section.php';
+include_once Constant::TEMPLATE_PATH . 'header/header-section.php';*/
+PageRender::load_template('header.head-section');
+PageRender::load_template('header.header-section');
 
 
 if ( $request_object->is_post_request() && isset($_POST) && ! empty($_POST)) {
@@ -43,6 +46,9 @@ if ( $request_object->is_post_request() && isset($_POST) && ! empty($_POST)) {
 							<?php echo $new_host->host_path ?>
             </li>
           </ul>
+        <!--TODO: Show errors-->
+        <?php elseif( count($new_host->errors) > 0) : ?>
+        <?php var_dump($new_host->errors); ?>
 				<?php else: ?>
           <h4 class="mb-3 text-center">مشخصات هاست به درستی ثبت نشد</h4>
           <p>لطفا با مدیر سایت تماس گرفته و مشکل را اعلام نمایید</p>
@@ -55,10 +61,12 @@ if ( $request_object->is_post_request() && isset($_POST) && ! empty($_POST)) {
 <?php
 
 } else {
-	include_once Constant::TEMPLATE_PATH . 'section/add-host-section.php';
+	//include_once Constant::TEMPLATE_PATH . 'section/host-add-section.php';
+  PageRender::load_template('section.host-add-section');
 }
 
-include_once Constant::TEMPLATE_PATH . 'footer/main-footer.php';
+//include_once Constant::TEMPLATE_PATH . 'footer/main-footer.php';
+PageRender::load_template('footer.main-footer');
 
 DatabaseFunctions::disconnect_database( $database );
 ?>

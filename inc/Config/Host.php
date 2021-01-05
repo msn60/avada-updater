@@ -46,10 +46,11 @@ class Host extends DatabaseObject {
 	 * @param array $args
 	 */
 	public function __construct( $args = [] ) {
-
-		$this->host_name        = $this->sanitize_with_trim($args['host_name']) ?? '';
-		$this->host_path        = $this->sanitize_with_trim($args['host_path']) ?? '';
-		$this->is_check_updraft = isset($args['is_check_updraft']) ? 1 : 0;
+		if ( count($args) > 0 ) {
+			$this->host_name        = $this->sanitize_with_trim($args['host_name']) ?? '';
+			$this->host_path        = $this->sanitize_with_trim($args['host_path']) ?? '';
+			$this->is_check_updraft = isset($args['is_check_updraft']) ? 1 : 0;
+		}
 
 		/*
 		 //Caution: allows private/protected properties to be set
@@ -77,6 +78,21 @@ class Host extends DatabaseObject {
 		}
 
 		return $this->errors;
+	}
+
+	/**
+	 * @param array $args
+	 */
+	public function merge_attributes( $args = [] ) {
+		foreach ( $args as $key => $value ) {
+			if ( property_exists( $this, $key ) && ! is_null( $value ) ) {
+				if ( $value == 'on' ) {
+					$this->$key = true;
+				}  else {
+					$this->$key = $value;
+				}
+			}
+		}
 	}
 
 	public function show_errors( $errors ) {

@@ -194,8 +194,26 @@ class DatabaseObject {
 		return $result;
 	}
 
+	/**
+	 * Method to update a record in database
+	 * @return bool|\mysqli_result
+	 */
 	protected function update() {
-		return false;
+		$this->validate();
+		if ( ! empty( $this->errors ) ) {
+			return false;
+		}
+
+		$attributes = $this->sanitize_attributes();
+		foreach ( $attributes as $key => $value ) {
+			$attributes_pairs[] = "{$key}='{$value}'";
+		}
+		$sql = "UPDATE ". static::$table_name . " SET ";
+		$sql .= join(', ', $attributes_pairs);
+		$sql .= " WHERE id='" . self::$database->escape_string($this->id) . "' ";
+		$sql .= " LIMIT 1";
+		$result = self::$database->query($sql);
+		return $result;
 	}
 
 
