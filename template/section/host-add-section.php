@@ -14,14 +14,14 @@ $host = array_shift( $params );
             <input type="text" class="form-control" id="hostName"
                    value="<?php echo  isset($host->host_name) ?  $host->host_name : '';?>"
                    name="host[host_name]" aria-describedby="emailHelp">
-            <small id="hostNameHelp" class="form-text text-muted">آدرس مورد نیاز برای استفاده در برنامه</small>
+            <small id="hostNameHelp" class="form-text text-muted">آدرس مورد نیاز برای استفاده در برنامه (ضروری)</small>
           </div>
           <div class="form-group">
             <label for="hostAddress">آدرس هاست</label>
             <input type="text" class="form-control" id="hostAddress"
                    value="<?php echo  isset($host->host_path) ?  $host->host_path : '';?>"
                    name="host[host_path]">
-            <small id="hostAddressHelp" class="form-text text-muted">آدرس نسبی برای هاست</small>
+            <small id="hostAddressHelp" class="form-text text-muted">آدرس نسبی برای هاست (ضروری)</small>
           </div>
           <div class="form-group form-check">
             <input type="checkbox" class="form-check-input" id="isNeedCheckUpdraft"

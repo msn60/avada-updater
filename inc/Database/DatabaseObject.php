@@ -20,6 +20,8 @@ namespace Updater\Database;
  * @package    Updater\Inc\Database
  * @author     Mehdi Soltani <soltani.n.mehdi@gmail.com>
  * @since      1.2.0
+ * @property array $errors
+ * @property string $crud_type
  */
 class DatabaseObject {
 	/**
@@ -38,6 +40,10 @@ class DatabaseObject {
 	 * @var array $errors
 	 */
 	public $errors = [];
+	/**
+	 * @var string $crud_type
+	 */
+	public $crud_type;
 
 	/**
 	 * To set database connection for a class
@@ -175,6 +181,7 @@ class DatabaseObject {
 	 * @return bool|\mysqli_result
 	 */
 	protected function create() {
+		$this->crud_type = 'create';
 		$this->validate();
 		if ( ! empty( $this->errors ) ) {
 			return false;
@@ -199,6 +206,7 @@ class DatabaseObject {
 	 * @return bool|\mysqli_result
 	 */
 	protected function update() {
+		$this->crud_type = 'update';
 		$this->validate();
 		if ( ! empty( $this->errors ) ) {
 			return false;

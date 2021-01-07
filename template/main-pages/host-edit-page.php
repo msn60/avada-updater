@@ -40,9 +40,14 @@ if ( false == $host ) {
 if ( $request_object->is_post_request() ) {
 	$args = $_POST['host'];
 	$host->merge_attributes($args);
-	$result = $host->save();
-	var_dump($result);
-	/*TODO: Show errors*/
+	$host_edit_result = $host->save();
+	PageRender::load_template(
+		'section.host-show-crud-result',
+		[
+			'edited_host'      => $host,
+			'host_edit_result' => $host_edit_result,
+		]
+	);
 	PageRender::load_template( 'footer.main-footer' );
 	DatabaseFunctions::disconnect_database( $database );
 	exit();

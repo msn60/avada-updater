@@ -40,6 +40,7 @@ class Host extends DatabaseObject {
 	public $host_path;
 	public $is_check_updraft;
 
+
 	/**
 	 * Host constructor.
 	 *

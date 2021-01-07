@@ -12,6 +12,7 @@
  */
 
 namespace Updater\Config;
+
 /**
  * Class Constant
  *
@@ -43,6 +44,13 @@ class Constant {
 	const DB_USER = 'mehdi';
 	const DB_PASS = 'mznx9182';
 	const DB_NAME = 'helper_db';
+	const TRANSLATION_STRINGS
+		= [
+			'create' => 'ساخت',
+			'read'   => 'خواندن',
+			'update' => 'به روز رسانی',
+			'delete' => 'حذف',
+		];
 }
 
 
