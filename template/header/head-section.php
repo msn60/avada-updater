@@ -1,5 +1,6 @@
 <?php
 use Updater\Config\Constant;
+$page_title = array_shift($params);
 ?>
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fa" dir="rtl">

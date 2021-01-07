@@ -1,27 +1,61 @@
-<hr>
-<section class="mt-2">
-	<div class="container  mt-2">
-    <div class="row">
-      <div class="col-md-8 bg-white  msn-shadow-light rounded-lg p-4 mx-auto ">
-        <form action="" method="post">
-          <div class="form-group">
-            <label for="hostName">نام هاست</label>
-            <input type="text" class="form-control" id="hostName" name="host[host_name]" aria-describedby="emailHelp">
-            <small id="hostNameHelp" class="form-text text-muted">آدرس مورد نیاز برای استفاده در برنامه</small>
-          </div>
-          <div class="form-group">
-            <label for="hostAddress">آدرس هاست</label>
-            <input type="text" class="form-control" id="hostAddress" name="host[host_path]">
-            <small id="hostAddressHelp" class="form-text text-muted">آدرس نسبی برای هاست</small>
-          </div>
-          <div class="form-group form-check">
-            <input type="checkbox" class="form-check-input" id="isNeedCheckUpdraft" name="host[is_check_updraft]">
-            <label class="form-check-label" for="isNeedCheckUpdraft">نیاز به چک کردن Updraft</label>
-          </div>
-          <button type="submit" class="btn btn-primary">ثبت هاست</button>
-        </form>
-      </div>
-    </div>
+<?php
+require_once '../main-init.php';
 
-	</div>
-</section>
+use Updater\Functions\UsableFunctions;
+use Updater\Config\Constant;
+use Updater\Database\DatabaseObject;
+use Updater\Database\DatabaseFunctions;
+use Updater\Functions\RequestFunctions;
+use Updater\Config\Host;
+use Updater\ViewHandler\PageRender;
+use Updater\Functions\Validation;
+$request_object = new RequestFunctions();
+
+$database = DatabaseFunctions::connect_to_database(
+	Constant::DB_SERVER,
+	Constant::DB_USER,
+	Constant::DB_PASS,
+	Constant::DB_NAME
+);
+DatabaseObject::set_database( $database );
+
+$page_title = 'حذف کردن هاست';
+/*include_once Constant::TEMPLATE_PATH . 'header/head-section.php';
+include_once Constant::TEMPLATE_PATH . 'header/header-section.php';*/
+PageRender::load_template( 'header.head-section', [$page_title] );
+PageRender::load_template( 'header.header-section' );
+
+if ( ! isset( $_GET['id'] ) ) {
+	$request_object->redirect_to(Constant::TEMPLATE_URL . 'main-pages/host-all-records-page.php');
+}
+
+$id = stripslashes($_GET['id']);
+$id = htmlspecialchars( $id ) ;
+$host = Host::find_by_id($id);
+if ( false == $host ) {
+	$request_object->redirect_to(Constant::TEMPLATE_URL . 'main-pages/host-all-records-page.php');
+}
+
+if ( $request_object->is_post_request() ) {
+	$args = $_POST['host'];
+	$host->merge_attributes($args);
+	$host_delete_result = $host->delete();
+	PageRender::load_template(
+		'section.host-show-crud-result',
+		[
+			'deleted_host'      => $host,
+			'host_delete_result' => $host_delete_result ,
+		]
+	);
+	PageRender::load_template( 'footer.main-footer' );
+	DatabaseFunctions::disconnect_database( $database );
+	exit();
+}
+
+PageRender::load_template('section.host-delete-section', [$host]);
+
+//include_once Constant::TEMPLATE_PATH . 'footer/main-footer.php';
+PageRender::load_template( 'footer.main-footer' );
+
+DatabaseFunctions::disconnect_database( $database );
+?>

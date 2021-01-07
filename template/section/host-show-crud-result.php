@@ -6,7 +6,9 @@ use Updater\Config\Constant;
 	<div class="container  mt-2">
 		<div class="row">
 			<div class="col-md-8 bg-white  msn-shadow-light rounded-lg p-4 mx-auto ">
-				<?php if ( @$params['host_creation_result'] === true || @$params['host_edit_result'] === true ): ?>
+				<?php if ( @$params['host_creation_result'] === true || @$params['host_edit_result'] === true
+          || @$params['host_delete_result'] === true
+        ): ?>
 					<h4 class="mb-3 text-center">
 						<span>عملیات </span>
 						<?php
@@ -16,6 +18,9 @@ use Updater\Config\Constant;
 							if ( @$params['edited_host']->crud_type === 'update' ) {
 								echo Constant::TRANSLATION_STRINGS[$params['edited_host']->crud_type];
               }
+						if ( @$params['deleted_host']->crud_type === 'delete') {
+							echo Constant::TRANSLATION_STRINGS[$params['deleted_host']->crud_type];
+						}
 						?>
 						<span> هاست به درستی انجام شد</span>
 					</h4>
@@ -28,6 +33,9 @@ use Updater\Config\Constant;
 							if ( @$params['edited_host']->crud_type === 'update' ) {
 								echo $params['edited_host']->host_name;
               }
+							if ( @$params['deleted_host']->crud_type === 'delete' ) {
+								echo $params['deleted_host']->host_name;
+							}
               ?>
 						</li>
 						<li>آدرس هاست:
@@ -38,7 +46,9 @@ use Updater\Config\Constant;
 							if ( @$params['edited_host']->crud_type === 'update' ) {
 								echo $params['edited_host']->host_path;
 							}
-
+							if ( @$params['deleted_host']->crud_type === 'delete' ) {
+								echo $params['deleted_host']->host_path;
+							}
               ?>
 						</li>
 					</ul>
@@ -67,6 +77,9 @@ use Updater\Config\Constant;
 						}
 						if ( @$params['edited_host']->crud_type === 'update' ) {
 							echo Constant::TRANSLATION_STRINGS[$params['edited_host']->crud_type];
+						}
+						if ( @$params['deleted_host']->crud_type === 'delete') {
+							echo Constant::TRANSLATION_STRINGS[$params['deleted_host']->crud_type];
 						}
 						?>
             <span> هاست به درستی انجام نشد!</span>

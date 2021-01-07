@@ -19,12 +19,12 @@ $database = DatabaseFunctions::connect_to_database(
 );
 DatabaseObject::set_database( $database );
 $page_title = 'نمایش همه هاست ها';
-PageRender::load_template( 'header.head-section' );
+PageRender::load_template( 'header.head-section', [$page_title]  );
 PageRender::load_template( 'header.header-section' );
 $hosts = Host::find_all();
 ?>
   <hr>
-  <section class="mt-2">
+  <section class="my-4">
     <div class="container  mt-2">
       <div class="row">
         <div class="col-md-12 bg-white  msn-shadow-light rounded-lg p-4 mx-auto ">

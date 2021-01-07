@@ -22,7 +22,7 @@ DatabaseObject::set_database( $database );
 $page_title = 'اضافه کردن هاست';
 /*include_once Constant::TEMPLATE_PATH . 'header/head-section.php';
 include_once Constant::TEMPLATE_PATH . 'header/header-section.php';*/
-PageRender::load_template( 'header.head-section' );
+PageRender::load_template( 'header.head-section', [$page_title]  );
 PageRender::load_template( 'header.header-section' );
 
 if ( $request_object->is_post_request() && isset( $_POST ) && ! empty( $_POST ) ) {
